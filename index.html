@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2742c4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Revision">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>GCSE Revision Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one calm column, a sticky tab bar, and a single big "tonight" card. Highlighter marks are the only flourish. */
+:root{
+  --bg:#f3f6fb; --surface:#ffffff; --sunk:#e8edf6; --ink:#15203a; --muted:#56627d; --line:#d8dfeb;
+  --brand:#2742c4; --brand-ink:#ffffff; --hl:#ffe24a; --hl-ink:#15203a;
+  --good:#1d8a55; --warn:#b26a00;
+  --sub-l:40%; --sub-s:62%; --tint-l:95%; --tint-s:70%;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1322; --surface:#161d31; --sunk:#1d2640; --ink:#e7ecf7; --muted:#9ba7c2; --line:#2a3452;
+  --brand:#8ea3ff; --brand-ink:#0e1322; --hl:#d9bd2b; --hl-ink:#0e1322;
+  --good:#5ccf93; --warn:#f0b04a;
+  --sub-l:70%; --sub-s:65%; --tint-l:20%; --tint-s:35%; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1322; --surface:#161d31; --sunk:#1d2640; --ink:#e7ecf7; --muted:#9ba7c2; --line:#2a3452;
+  --brand:#8ea3ff; --brand-ink:#0e1322; --hl:#d9bd2b; --hl-ink:#0e1322;
+  --good:#5ccf93; --warn:#f0b04a;
+  --sub-l:70%; --sub-s:65%; --tint-l:20%; --tint-s:35%; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:760px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hl{background:linear-gradient(100deg,transparent 0 2%,var(--hl) 2% 97%,transparent 97%) 0 62%/100% 58% no-repeat;color:inherit;padding:0 .12em}
+
+/* header */
+header.top{padding-top:20px;display:flex;flex-direction:column;gap:6px}
+.top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.brand{font-size:1.65rem;font-weight:800;letter-spacing:-.01em}
+.count{font-size:.95rem;color:var(--muted)}
+.count b{color:var(--ink)}
+.chip-status{font-size:.78rem;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--surface);white-space:nowrap}
+.chip-status.ok{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,var(--line))}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 10px;margin-top:6px}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:var(--sunk);padding:4px;border-radius:12px}
+.tabbar.two{grid-template-columns:1fr 1fr}
+.tabbar button{border:0;background:transparent;padding:9px 2px;border-radius:9px;font-weight:700;font-size:.86rem;color:var(--muted);min-width:0}
+.tabbar button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgb(0 0 0 / .12)}
+
+main{display:flex;flex-direction:column;gap:22px;padding-top:8px}
+section{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sec-h h2{font-size:1.25rem}
+.eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted)}
+
+/* subject colour */
+.s{--c:hsl(var(--h) var(--sub-s) var(--sub-l));--t:hsl(var(--h) var(--tint-s) var(--tint-l))}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none;display:inline-block}
+
+/* tonight card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.big{border-top:6px solid var(--c);background:linear-gradient(180deg,var(--t),var(--surface) 140px)}
+.big .subj{font-size:clamp(1.8rem,7vw,2.6rem);font-weight:800;letter-spacing:-.02em}
+.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{font-size:.78rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.pill.c{background:var(--t);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 30%,transparent)}
+.topic{font-size:1.15rem;font-weight:700}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.steps li{display:grid;grid-template-columns:4.2em 1fr;gap:10px;align-items:baseline}
+.steps .mins{font-family:var(--f-mono);font-size:.85rem;color:var(--c);font-weight:500}
+.tip{font-size:.9rem;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 16px;border-radius:10px;font-weight:700}
+.btn.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.btn.done{background:var(--good);border-color:var(--good);color:var(--surface)}
+.btn.small{padding:6px 11px;font-size:.88rem;border-radius:8px}
+.btn.ghost{background:transparent}
+.timer{font-family:var(--f-mono);font-size:2rem;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.timer-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--sunk);border-radius:12px;padding:10px 14px}
+.swaps{display:flex;gap:6px;flex-wrap:wrap}
+.swaps button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:.85rem;display:inline-flex;gap:6px;align-items:center}
+.calm{font-size:1.05rem}
+
+/* session rows */
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.row.isdone{background:var(--sunk)}
+.row.isdone .rt{text-decoration:line-through;text-decoration-color:var(--muted)}
+.tick{width:30px;height:30px;border-radius:9px;border:2px solid var(--c);background:transparent;display:grid;place-items:center;padding:0;margin-top:1px}
+.tick svg{width:18px;height:18px;opacity:0}
+.tick[aria-pressed="true"]{background:var(--c)}
+.tick[aria-pressed="true"] svg{opacity:1;stroke:var(--surface)}
+.row details{min-width:0}
+.row summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:1px}
+.row summary::-webkit-details-marker{display:none}
+.rt{font-weight:700;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rs{font-size:.92rem;color:var(--muted)}
+.row .more{padding-top:10px;display:flex;flex-direction:column;gap:10px}
+
+/* week */
+.weeknav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.weeknav .wk{text-align:center;display:flex;flex-direction:column}
+.weeknav .wk b{font-family:var(--f-display);font-size:1.1rem}
+.day{display:grid;grid-template-columns:4.5em 1fr;gap:10px;align-items:start}
+.day .dl{padding-top:12px;display:flex;flex-direction:column;line-height:1.2}
+.day .dl b{font-family:var(--f-display);font-size:1.05rem}
+.day.today .dl b{background:var(--hl);color:var(--hl-ink);border-radius:4px;padding:0 4px;align-self:flex-start}
+.off{padding:12px;color:var(--muted);font-size:.92rem;border:1px dashed var(--line);border-radius:12px}
+.rest-banner{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;background:var(--sunk);border-radius:12px;padding:12px 14px}
+
+/* progress */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.stat .n{font-family:var(--f-display);font-size:1.8rem;font-weight:800;font-variant-numeric:tabular-nums}
+.stat .l{font-size:.85rem;color:var(--muted)}
+.ringwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.ring text{fill:var(--ink);font-family:var(--f-display);font-weight:800}
+.bars{display:flex;flex-direction:column;gap:14px}
+.bar-h{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.92rem}
+.bar-h b{display:inline-flex;gap:8px;align-items:center}
+.track{position:relative;height:12px;background:var(--sunk);border-radius:999px;overflow:hidden;margin-top:5px}
+.track .due{position:absolute;inset:0 auto 0 0;background:var(--t);border-right:2px solid var(--c)}
+.track .got{position:absolute;inset:0 auto 0 0;background:var(--c);border-radius:999px}
+.phasebar{display:flex;height:30px;border-radius:10px;overflow:hidden;position:relative;font-size:.75rem;font-weight:700}
+.phasebar div{display:flex;align-items:center;padding:0 8px;white-space:nowrap;overflow:hidden;color:var(--ink)}
+.ph-M{background:color-mix(in srgb,var(--warn) 22%,var(--surface))}
+.ph-X{background:color-mix(in srgb,var(--warn) 45%,var(--surface))}
+.ph-R{background:color-mix(in srgb,var(--warn) 32%,var(--surface))}
+.ph-L{background:color-mix(in srgb,var(--brand) 18%,var(--surface))}
+.ph-P{background:color-mix(in srgb,var(--brand) 32%,var(--surface))}
+.ph-E{background:color-mix(in srgb,var(--brand) 48%,var(--surface))}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:baseline}
+.grades{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:.9rem}
+.grades label{display:inline-flex;gap:6px;align-items:center;font-weight:700}
+.grades select{width:auto;padding:5px 8px}
+.nowmark{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--ink);border-radius:2px}
+.phaselegend{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;font-size:.9rem}
+.phaselegend b{display:block}
+
+/* settings */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.field .lab{font-weight:700;font-size:.92rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+select,input[type=date],input[type=text],textarea{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+textarea{min-height:180px;font-size:.92rem;line-height:1.45}
+.daychips{display:flex;gap:6px;flex-wrap:wrap}
+.daychips button{width:52px;padding:9px 0;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:700}
+.daychips button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.subjcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.subjcard.offsub{opacity:.62}
+.subj-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.subj-top .nm{font-weight:700;flex:1;min-width:140px;display:flex;align-items:center;gap:8px}
+.switch{width:46px;height:28px;border-radius:999px;border:0;background:var(--line);position:relative;flex:none;padding:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);transition:left .15s}
+.switch[aria-checked="true"]{background:var(--c)}
+.switch[aria-checked="true"]::after{left:21px}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stepper button{border:0;background:var(--sunk);width:34px;height:32px;font-weight:700;font-size:1.1rem}
+.stepper span{min-width:2.4em;text-align:center;font-family:var(--f-mono)}
+.subj-why{font-size:.88rem;color:var(--muted)}
+.subjcard details summary{cursor:pointer;font-size:.9rem;font-weight:700;color:var(--brand)}
+.subjcard details[open] summary{margin-bottom:8px}
+.note{background:var(--sunk);border-radius:12px;padding:12px 14px;font-size:.92rem}
+.note p{margin:0 0 6px}.note p:last-child{margin:0}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+a{color:var(--brand)}
+h3{font-size:1.1rem}
+.pill.together{background:color-mix(in srgb,var(--good) 16%,var(--surface));color:var(--good)}
+.buddystrip{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;color:var(--muted)}
+.buddystrip b{color:var(--ink)}
+.buddystrip .ok,.bstat.ok{color:var(--good)}
+.buddystrip .live,.bstat.live{color:var(--good);font-weight:700}
+.bstat.live::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);margin-right:6px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+.buddy{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.bname{display:flex;align-items:center;gap:10px}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--sunk);display:grid;place-items:center;font-weight:800;font-family:var(--f-display)}
+.bstat{font-size:.95rem}
+.bnums{font-size:.82rem;color:var(--muted)}
+.codecard{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.code{font-size:2rem;letter-spacing:.18em;font-weight:500}
+.corelist{display:flex;flex-direction:column;gap:8px}
+.corerow{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}
+.err{color:var(--warn);font-weight:700;margin:0}
+.authwrap{max-width:440px;margin:0 auto;width:100%}
+.authform{display:flex;flex-direction:column;gap:14px}
+input[type=email],input[type=password]{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+.acct{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+button:disabled{opacity:.6;cursor:default}
+@media (max-width:360px){.tabbar button{font-size:.78rem}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <h1 class="brand">GCSE <span class="hl">Revision</span> Plan</h1>
+      <span id="status" class="chip-status">Saved on this device</span>
+    </div>
+    <div id="countdown" class="count"></div>
+  </header>
+  <nav class="tabs" aria-label="Sections">
+    <div class="tabbar" role="tablist">
+      <button role="tab" data-tab="tonight" aria-selected="true">Tonight</button>
+      <button role="tab" data-tab="week" aria-selected="false">Week</button>
+      <button role="tab" data-tab="buddies" aria-selected="false">Buddies</button>
+      <button role="tab" data-tab="progress" aria-selected="false">Progress</button>
+      <button role="tab" data-tab="setup" aria-selected="false">Set up</button>
+    </div>
+  </nav>
+  <main id="main"></main>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script>
+(function(){
+"use strict";
+/* ---------- curriculum data ---------- */
+const PRESETS = [
+ {id:"maths",name:"Maths (Foundation)",kind:"maths",h:222,on:true,w:4,
+  why:"Foundation tier: 3 papers, 4½ hours, top grade 5. A 4 is the pass you need to avoid resitting at college. On Higher? Switch this off and Maths (Higher) on.",
+  exams:["Paper 1 (non-calculator)","Paper 2 (calculator)","Paper 3 (calculator)"],
+  topics:["Place value, rounding & estimation","Negative numbers, BIDMAS & calculator skills","Factors, multiples, primes, HCF & LCM","Fractions: add, subtract, multiply, divide","Fractions, decimals & percentages conversions","Percentages: of amounts, increase/decrease, reverse","Powers, roots & standard form","Simplifying, expanding & factorising","Solving linear equations & rearranging formulae","Sequences & the nth term","Coordinates & straight-line graphs (y = mx + c)","Inequalities & simple simultaneous equations","Quadratic graphs & factorising quadratics","Ratio & sharing in a ratio","Proportion, best buys & recipes","Speed, density & other compound measures","Simple & compound interest, depreciation","Units, time, money & timetable problems","Angles, parallel lines, polygons & bearings","Perimeter & area (incl. circles)","Volume & surface area of prisms & cylinders","Pythagoras & basic trigonometry","Transformations, constructions & loci","Probability: tables, trees & Venn diagrams","Statistics: averages, charts & scatter graphs"]},
+ {id:"mathsH",name:"Maths (Higher)",kind:"maths",h:222,on:false,w:5,
+  why:"Higher tier: 3 papers, 4½ hours, grades 4–9, with a lot more algebra. Switch Maths (Foundation) off if you use this.",
+  exams:["Paper 1 (non-calculator)","Paper 2 (calculator)","Paper 3 (calculator)"],
+  topics:["Indices, surds & standard form","Fractions, percentages & bounds","Expanding, factorising & rearranging","Linear & simultaneous equations","Quadratics: factorise, formula, completing the square","Inequalities & sequences (incl. quadratic nth term)","Straight-line graphs, gradients, parallel & perpendicular","Quadratic, cubic, reciprocal & exponential graphs; transformations","Functions, iteration & algebraic proof","Ratio, proportion & rates of change","Compound interest, growth & decay, direct & inverse proportion","Angles, polygons & bearings","Area, volume & surface area (cones, spheres, frustums)","Pythagoras & trigonometry (incl. exact values)","Sine rule, cosine rule, ½ab sin C & 3D trig","Circle theorems","Transformations, congruence & similarity","Vectors","Probability: trees, Venn diagrams, conditional","Statistics: cumulative frequency, box plots, histograms","Gradients & area under graphs (velocity–time)","Equation of a circle & tangents"]},
+ {id:"sci",name:"Combined Science",kind:"science",h:152,on:true,w:6,
+  why:"Counts as 2 GCSEs and has 6 papers across Biology, Chemistry and Physics, so it gets the biggest share.",
+  exams:["Biology Paper 1","Chemistry Paper 1","Physics Paper 1","Biology Paper 2","Chemistry Paper 2","Physics Paper 2"],
+  topics:["Biology: Cell biology","Chemistry: Atomic structure & the periodic table","Physics: Energy","Biology: Organisation (digestion, heart, plants)","Chemistry: Bonding, structure & properties","Physics: Electricity","Biology: Infection & response","Chemistry: Quantitative chemistry (moles)","Physics: Particle model of matter","Biology: Bioenergetics","Chemistry: Chemical changes (acids, electrolysis)","Physics: Atomic structure & radioactivity","Required practicals: Biology","Chemistry: Energy changes","Biology: Homeostasis & response","Physics: Forces","Chemistry: Rates & equilibrium","Biology: Inheritance, variation & evolution","Physics: Waves","Chemistry: Organic chemistry & chemical analysis","Biology: Ecology","Physics: Magnetism & electromagnetism","Chemistry: Atmosphere & using resources","Required practicals: Chemistry & Physics"]},
+ {id:"bio",name:"Biology",kind:"science",h:128,on:false,w:3.5,
+  why:"Triple Science: switch these three on (and Combined Science off) if you take separate sciences.",
+  exams:["Biology Paper 1","Biology Paper 2"],
+  topics:["Cell biology","Organisation","Infection & response","Bioenergetics","Homeostasis & response","Inheritance, variation & evolution","Ecology","Required practicals"]},
+ {id:"chem",name:"Chemistry",kind:"science",h:178,on:false,w:3.5,
+  why:"Triple Science option.",
+  exams:["Chemistry Paper 1","Chemistry Paper 2"],
+  topics:["Atomic structure & the periodic table","Bonding, structure & properties","Quantitative chemistry","Chemical changes","Energy changes","Rates & equilibrium","Organic chemistry","Chemical analysis","Atmosphere","Using resources","Required practicals"]},
+ {id:"phys",name:"Physics",kind:"science",h:200,on:false,w:3.5,
+  why:"Triple Science option.",
+  exams:["Physics Paper 1","Physics Paper 2"],
+  topics:["Energy","Electricity","Particle model of matter","Atomic structure","Forces","Waves","Magnetism & electromagnetism","Space physics","Required practicals"]},
+ {id:"englang",name:"English Language",kind:"englang",h:26,on:true,w:3,
+  why:"No content to memorise, but each question type has a technique. Short, regular practice works best.",
+  exams:["Paper 1: Explorations in creative reading & writing","Paper 2: Writers' viewpoints & perspectives"],
+  topics:["Paper 1 Q1–2: retrieval & language analysis","Paper 1 Q3: structure","Paper 1 Q4: evaluating a statement","Paper 1 Q5: descriptive or narrative writing","Paper 2 Q1–2: true/false & summary","Paper 2 Q3: language in non-fiction","Paper 2 Q4: comparing perspectives","Paper 2 Q5: viewpoint / persuasive writing","Spelling, punctuation & ambitious vocabulary"]},
+ {id:"englit",name:"English Literature",kind:"englit",h:350,on:true,w:4,
+  why:"Closed book: you need quotes for every text plus the poetry anthology, so it needs more time than Language.",
+  exams:["Paper 1: Shakespeare & 19th-century novel","Paper 2: Modern text & poetry"],
+  topics:["Shakespeare play (e.g. Macbeth): plot & key scenes","Shakespeare play: characters, themes & key quotes","19th-century novel (e.g. A Christmas Carol): plot & context","19th-century novel: characters, themes & key quotes","Modern text (e.g. An Inspector Calls): characters & themes","Modern text: context & key quotes","Poetry anthology: poems 1–5","Poetry anthology: poems 6–10","Poetry anthology: poems 11–15","Comparing two anthology poems","Unseen poetry"]},
+ {id:"french",name:"French",kind:"mfl",h:272,on:true,w:4,
+  why:"Four skills (listening, speaking, reading, writing) and a big vocab list. Little and often is how vocab sticks.",
+  exams:["Listening (incl. dictation)","Reading (incl. translation into English)","Writing (incl. translation into French)","Speaking: role play, read-aloud & photo card"],
+  topics:["Identity & relationships","Healthy living & lifestyle","Education & work","Free-time activities","Customs, festivals & celebrations","Celebrity culture","Travel & tourism","Media & technology","The environment & where people live","Grammar: present tense & key irregular verbs","Grammar: perfect vs imperfect","Grammar: future & conditional","Translation practice (both directions)","Listening & dictation","Speaking: read-aloud & role play","Speaking: photo card & conversation"]},
+ {id:"art",name:"Art & Design",kind:"art",h:318,on:true,w:2,
+  why:"60% is the portfolio, done mostly in lessons. Home time goes on sketchbook work and prepping for the 10-hour exam.",
+  exams:["Externally Set Assignment: explore your starting point","Portfolio: finish & present a sequence of work"],
+  topics:["Artist research page linked to current project (AO1)","Observational drawing from life (AO3)","Experiment with a new medium or technique (AO2)","Photograph & record ideas for the project (AO3)","Refine and annotate the weakest portfolio page (AO2)","Composition studies for a final piece (AO4)","Written reflection & annotation check (AO1–AO4)"]},
+ {id:"hist",name:"History",kind:"humanities",h:42,on:true,w:3.5,
+  why:"Edit the topics to match your board and units (e.g. AQA, Edexcel or OCR).",
+  exams:["Paper 1 practice questions","Paper 2 practice questions"],
+  topics:["Period study: key events & chronology","Period study: causes & consequences","Wider world depth study","Thematic study (e.g. Health & the people)","British depth study","Historic environment / site","Source & interpretation skills"]},
+ {id:"geog",name:"Geography",kind:"humanities",h:90,on:true,w:3.5,
+  why:"Three papers including skills and fieldwork. Edit the topics to match your board.",
+  exams:["Paper 1: Physical","Paper 2: Human","Paper 3: Skills & fieldwork"],
+  topics:["Natural hazards & tectonics","Weather hazards & climate change","Ecosystems, rainforests & cold/hot environments","UK physical landscapes (coasts, rivers)","Urban issues & challenges","The changing economic world","Resource management","Fieldwork write-ups","Map, graph & statistical skills"]},
+ {id:"rs",name:"Religious Studies",kind:"humanities",h:248,on:false,w:3,
+  why:"Compulsory at many schools. Switch on and edit the topics to match your religions and themes.",
+  exams:["Paper 1: Beliefs & practices","Paper 2: Thematic studies"],
+  topics:["Religion 1: beliefs & teachings","Religion 1: practices","Religion 2: beliefs & teachings","Religion 2: practices","Theme: relationships & families","Theme: religion & life","Theme: peace & conflict","Theme: crime & punishment","12-mark evaluation answers"]},
+ {id:"cs",name:"Computer Science",kind:"humanities",h:188,on:true,w:3.5,
+  why:"Includes a programming paper, so some sessions should be spent actually writing code.",
+  exams:["Paper 1: Computational thinking & programming","Paper 2: Computing concepts"],
+  topics:["Algorithms: searching & sorting","Programming fundamentals & trace tables","Data representation (binary, hex, images, sound)","Computer systems & architecture","Networks & protocols","Cyber security","Ethical, legal & environmental impacts","Writing code from scratch"]}
+];
+const CUSTOM_HUES=[12,62,100,240,290,330,195,40];
+
+/* what to do in a session, by subject kind and phase */
+const ACT={
+ maths:{L:"Watch a short explainer on this (Corbettmaths or Bitesize), copy one worked example, then do the matching practice questions. Put the method on a flashcard.",
+        P:"Do exam questions on this topic, mark them, then redo every question you dropped marks on.",
+        E:"Mixed exam questions under timed conditions. Add anything you got wrong to a 'fix list'."},
+ science:{L:"Read this topic (revision guide, Bitesize or Seneca). Make flashcards of key words, equations and processes, then test yourself.",
+          P:"Answer past exam questions on this topic, including one 6-marker. Mark with the mark scheme.",
+          E:"Blurt it: write everything you remember on a blank page, check against notes, then do timed questions."},
+ englang:{L:"Read a model answer for this question, note what it does well, then write one practice paragraph.",
+          P:"Answer this question on an unseen extract, timed. Mark it against the mark-scheme levels.",
+          E:"Full timed answer, then compare with a top-band example and note one thing to steal."},
+ englit:{L:"Recap the plot or poem, then make 5 quote cards: quote on the front, technique + effect + theme on the back.",
+         P:"Plan two past-paper questions (10 min each), then write one paragraph in full.",
+         E:"Timed essay from a past question. Test quotes from memory before you start."},
+ mfl:{L:"Learn 15–20 words for this topic (flashcards or Quizlet), then write 5 sentences using them in different tenses.",
+      P:"Do listening or reading questions on this theme, then answer 3 speaking questions out loud.",
+      E:"Timed exam section, then record yourself answering a photo card and play it back."},
+ art:{L:"Sketchbook session. Work on this, then annotate what you did and why.",
+      P:"Sketchbook session. Work on this, then annotate it against the assessment objectives.",
+      E:"Exam prep. Work on this for your ESA prep pages so the 10-hour exam is all making, no planning."},
+ humanities:{L:"Turn your notes on this into a one-page summary or mind map, then cover it and test yourself.",
+             P:"Answer a past exam question on this topic and mark it with the mark scheme.",
+             E:"Timed exam question, then review it against the mark scheme and fix gaps."}
+};
+const MOCKPREP={
+ maths:"Mock prep: 10 mixed questions on this (Corbettmaths 5-a-day is ideal), then check the method for anything you got wrong.",
+ science:"Mock prep: blurt this topic on a blank page, check it against your notes, then do 5 exam questions on it.",
+ englang:"Mock prep: re-learn the method for this question, then write one timed practice answer.",
+ englit:"Mock prep: learn 5 key quotes for this and plan one past-paper question.",
+ mfl:"Mock prep: learn 15 high-value words and phrases for this theme, then answer 3 speaking questions out loud.",
+ art:"Mock prep: check what the art mock involves and prepare sketches or reference images for it.",
+ humanities:"Mock prep: make a one-page summary of this, then answer one exam question."
+};
+Object.keys(MOCKPREP).forEach(k=>ACT[k].M=MOCKPREP[k]);
+const EXAMACT={
+ M:"Mock practice: do a section of this paper timed and closed-book, then mark it.",
+ R:"If the mock for this paper is back, redo every question you lost marks on. If not, do a section of the paper timed, then mark it.",
+ L:"Pick one section of this paper. Do it open-book, then mark it with the mark scheme.",
+ P:"Do a section of this paper timed and closed-book, then mark it.",
+ E:"As much of this paper as fits, in exam conditions, then mark it and list the topics to fix."
+};
+const PH={
+ M:{name:"Mock prep",short:"Prep",desc:"Quick-fire recap across every subject so nothing in the mocks is a total surprise."},
+ X:{name:"Mock exams",short:"Mocks",desc:"Short 30-minute sessions. Recap tomorrow's subject only, then rest."},
+ R:{name:"Mock review",short:"Review",desc:"Go through each mock paper as it comes back and build a fix list of weak topics."},
+ L:{name:"Learn & condense",short:"Learn",desc:"Go through every topic once. Make flashcards and summaries you can test yourself from."},
+ P:{name:"Practise & apply",short:"Practise",desc:"Exam questions topic by topic. Mark them, redo the ones that went wrong."},
+ E:{name:"Exam mode",short:"Exams",desc:"Timed papers and blurting. Focus on the fix list, not new notes."}
+};
+const noon=d=>parse(ymd(d));
+function segments(){
+  const st=state.settings,s=parse(st.start),e=parse(st.exam),segs=[];let cur=s;
+  const ms=st.mockStart?parse(st.mockStart):null,me=st.mockEnd?parse(st.mockEnd):null;
+  if(ms&&me&&me>=ms&&ms<e&&me>=s){
+    if(ms>cur)segs.push({k:"M",from:cur,to:ms});
+    const xTo=addDays(me,1);segs.push({k:"X",from:ms>cur?ms:cur,to:xTo});
+    const rTo=addDays(me,15)<e?addDays(me,15):e;
+    if(rTo>xTo)segs.push({k:"R",from:xTo,to:rTo});
+    cur=rTo>xTo?rTo:xTo;
+  }
+  if(cur<e){const span=e-cur;let prev=0;[["L",.45],["P",.8],["E",1]].forEach(([k,f])=>{segs.push({k,from:noon(new Date(cur.getTime()+span*prev)),to:f===1?e:noon(new Date(cur.getTime()+span*f))});prev=f})}
+  return segs.map(x=>Object.assign({k:x.k},PH[x.k],x));
+}
+/* subjects a study group can line up on together nights; ids = which personal subjects count as that subject */
+const CORE=[
+ {k:"maths",name:"Maths",ids:["maths","mathsH"],w:5,on:true},
+ {k:"science",name:"Science",ids:["sci","bio","chem","phys"],w:6,on:true},
+ {k:"englang",name:"English Language",ids:["englang"],w:3,on:true},
+ {k:"englit",name:"English Literature",ids:["englit"],w:4,on:true},
+ {k:"french",name:"French",ids:["french"],w:4,on:false},
+ {k:"hist",name:"History",ids:["hist"],w:3.5,on:false},
+ {k:"geog",name:"Geography",ids:["geog"],w:3.5,on:false},
+ {k:"cs",name:"Computer Science",ids:["cs"],w:3.5,on:false},
+ {k:"rs",name:"Religious Studies",ids:["rs"],w:3,on:false}
+];
+function defaultGroupSettings(){
+  const core={};CORE.forEach(c=>core[c.k]={on:c.on,w:c.w});
+  return {days:[0,1,0,1,0,0,0],start:"2026-11-02",core};
+}
+function groupSettings(){return group?merge(defaultGroupSettings(),group.settings||{}):null}
+let gsCache={key:"",map:null};
+/* date -> {k: core key, n: how many times that subject has come up on together nights so far} */
+function groupSchedule(){
+  const gs=groupSettings();if(!gs)return null;
+  const key=JSON.stringify(gs);if(gsCache.key===key)return gsCache.map;
+  const on=CORE.filter(c=>gs.core[c.k]&&gs.core[c.k].on),map={};
+  if(on.length&&gs.days.some(Boolean)){
+    const W=on.reduce((a,c)=>a+(+gs.core[c.k].w||1),0),credit={},n={};on.forEach(c=>{credit[c.k]=0;n[c.k]=0});
+    let d=parse(gs.start);const stop=addDays(d,500);
+    for(;d<stop;d=addDays(d,1)){
+      if(!gs.days[dow(d)])continue;
+      on.forEach(c=>credit[c.k]+=(+gs.core[c.k].w||1)/W);
+      let best=on[0].k;on.forEach(c=>{if(credit[c.k]>credit[best])best=c.k});
+      credit[best]-=1;map[ymd(d)]={k:best,n:n[best]++};
+    }
+  }
+  gsCache={key,map};return map;
+}
+/* which of my own subjects stands in for a group subject (null if I don't take it) */
+function mySubjectFor(k,n,byId){
+  const c=CORE.find(x=>x.k===k);if(!c)return null;
+  if(k==="science"){if(byId.sci)return "sci";const tri=["bio","chem","phys"].filter(id=>byId[id]);return tri.length?tri[n%tri.length]:null}
+  return c.ids.find(id=>byId[id])||null;
+}
+function buddyNames(){return members.filter(m=>!user||m.id!==user.id).map(m=>m.display_name||"Friend")}
+const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const DAYS_LONG=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+/* ---------- dates ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const p=String(s).split("-").map(Number);return new Date(p[0],p[1]-1,p[2],12)};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const dow=d=>(d.getDay()+6)%7;
+const mondayOf=d=>addDays(d,-dow(d));
+const fmt=d=>d.getDate()+" "+MONTHS[d.getMonth()];
+const dayDiff=(a,b)=>Math.round((b-a)/864e5);
+const todayD=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate(),12)};
+
+/* ---------- state ---------- */
+function defaults(){
+  const subjects={};
+  PRESETS.forEach((p,i)=>{subjects[p.id]={name:p.name,on:p.on,w:p.w,topics:p.topics.slice(),order:i}});
+  return {v:1,
+    settings:{start:"2026-11-02",exam:"2027-05-10",mockStart:"2026-11-16",mockEnd:"2026-11-27",days:[1,1,1,1,0,0,1],longDay:6,sessionMin:45,longMin:120,perNight:1},
+    subjects, restWeeks:{"2026-12-21":true}, done:{}, swaps:{}};
+}
+const isObj=x=>x&&typeof x==="object"&&!Array.isArray(x);
+function merge(a,b){const o=isObj(a)?Object.assign({},a):{};if(!isObj(b))return o;for(const k in b){o[k]=isObj(b[k])&&isObj(o[k])?merge(o[k],b[k]):(isObj(b[k])?merge({},b[k]):b[k])}return o}
+function normalize(s){
+  const d=defaults();
+  const out=merge(d,s||{});
+  out.settings=merge(d.settings,(s||{}).settings);
+  if(!Array.isArray(out.settings.days)||out.settings.days.length!==7)out.settings.days=d.settings.days;
+  for(const id in out.subjects){const x=out.subjects[id];if(!Array.isArray(x.topics))x.topics=[];}
+  return out;
+}
+/* ---------- local storage (one plan per account, plus one for offline use) ---------- */
+const LS_BASE="gcse-plan-v1";
+let lsKey=LS_BASE,state=defaults(),localSavedAt=0;
+function loadLocal(key){
+  try{const raw=localStorage.getItem(key);if(!raw)return false;const o=JSON.parse(raw);
+    if(o&&o.state){state=normalize(o.state);localSavedAt=+o.savedAt||0}else{state=normalize(o);localSavedAt=0}
+    return true}catch(e){return false}
+}
+function saveLocal(){try{localStorage.setItem(lsKey,JSON.stringify({state,savedAt:localSavedAt}))}catch(e){}}
+loadLocal(lsKey);
+
+/* ---------- server sync (Supabase) ---------- */
+const CFG=window.GCSE_CONFIG||{};
+const ONLINE=!!(CFG.supabaseUrl&&CFG.supabaseAnonKey&&window.supabase&&window.supabase.createClient);
+let sb=null,user=null,profile=null,group=null,members=[],channels=[],authMode=ONLINE?"pending":"none",offlineChosen=false;
+let saveT=null,saving=false,saveAgain=false,lastSummary="",summaryT=null;
+function setStatus(m){const el=document.getElementById("status");if(!el)return;
+  const t={local:"Saved on this device",synced:"Synced",saving:"Saving…",offline:"Offline: saved on this device",signedout:"Not signed in"}[m]||m;
+  el.textContent=t;el.className="chip-status"+(m==="synced"?" ok":"");}
+function commit(patch){
+  state=normalize(merge(state,patch));localSavedAt=Date.now();saveLocal();
+  if(user){setStatus("saving");clearTimeout(saveT);saveT=setTimeout(pushPlan,800)}
+  render();
+}
+async function pushPlan(){
+  if(!user)return;
+  if(saving){saveAgain=true;return}
+  saving=true;
+  const {error}=await sb.from("plans").upsert({user_id:user.id,data:state,updated_at:new Date(localSavedAt||Date.now()).toISOString()});
+  saving=false;
+  if(error){setStatus("offline");clearTimeout(saveT);saveT=setTimeout(pushPlan,10000)}
+  else if(!saveAgain)setStatus("synced");
+  if(saveAgain){saveAgain=false;pushPlan()}
+}
+async function pullPlan(){
+  if(!user)return;
+  const {data,error}=await sb.from("plans").select("data,updated_at").eq("user_id",user.id).maybeSingle();
+  if(error){setStatus("offline");return}
+  if(!data){if(!localSavedAt)localSavedAt=Date.now();await pushPlan();return}
+  const at=Date.parse(data.updated_at)||0;
+  if(at>localSavedAt){state=normalize(data.data);localSavedAt=at;saveLocal();safeRender()}
+  else if(localSavedAt>at)pushPlan();
+  else setStatus("synced");
+}
+async function loadProfile(){
+  const {data}=await sb.from("profiles").select("id,display_name,group_id").eq("id",user.id).maybeSingle();
+  profile=data||{id:user.id,display_name:"Me",group_id:null};
+}
+async function loadGroup(){
+  if(!profile||!profile.group_id){group=null;members=[];return}
+  const [g,m]=await Promise.all([
+    sb.from("groups").select("id,name,code,settings").eq("id",profile.group_id).maybeSingle(),
+    sb.from("profiles").select("id,display_name,summary,studying").eq("group_id",profile.group_id)]);
+  group=g.data||null;members=m.data||[];
+  if(!group){profile.group_id=null;members=[]}
+}
+function subscribe(){
+  channels.forEach(c=>{try{sb.removeChannel(c)}catch(_){}});channels=[];
+  if(!user)return;
+  const own=sb.channel("plan-"+user.id).on("postgres_changes",{event:"*",schema:"public",table:"plans",filter:"user_id=eq."+user.id},p=>{
+    const row=p.new;if(!row||!row.data)return;const at=Date.parse(row.updated_at)||0;
+    if(at>localSavedAt){state=normalize(row.data);localSavedAt=at;saveLocal();safeRender()}
+  }).subscribe();
+  channels.push(own);
+  if(profile&&profile.group_id){
+    const gid=profile.group_id;
+    channels.push(sb.channel("group-"+gid)
+      .on("postgres_changes",{event:"*",schema:"public",table:"profiles",filter:"group_id=eq."+gid},p=>{
+        const row=p.new;if(!row||!row.id)return;
+        const i=members.findIndex(x=>x.id===row.id);
+        if(row.group_id!==gid){if(i>=0)members.splice(i,1)}
+        else if(i>=0)members[i]=Object.assign({},members[i],row);else members.push(row);
+        safeRender();
+      })
+      .on("postgres_changes",{event:"UPDATE",schema:"public",table:"groups",filter:"id=eq."+gid},p=>{if(p.new){group=Object.assign({},group,p.new);safeRender()}})
+      .subscribe());
+  }
+}
+async function onSignedIn(u){
+  user=u;authMode="in";
+  const prevKey=lsKey;lsKey=LS_BASE+":"+u.id;
+  if(!loadLocal(lsKey)&&prevKey===LS_BASE&&localSavedAt){/* first sign-in on this device: keep the offline plan */saveLocal()}
+  setStatus("saving");render();
+  await loadProfile();
+  await Promise.all([pullPlan(),loadGroup()]);
+  subscribe();render();
+}
+function onSignedOut(){
+  user=null;profile=null;group=null;members=[];subscribe();
+  lsKey=LS_BASE;state=defaults();localSavedAt=0;loadLocal(lsKey);
+  authMode="out";setStatus("signedout");render();
+}
+async function initServer(){
+  if(!ONLINE){setStatus("local");return}
+  sb=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey);
+  const {data}=await sb.auth.getSession();
+  if(data&&data.session)await onSignedIn(data.session.user);else onSignedOut();
+  sb.auth.onAuthStateChange((ev,session)=>{
+    if(ev==="SIGNED_IN"&&session&&(!user||user.id!==session.user.id))onSignedIn(session.user);
+    else if(ev==="SIGNED_OUT")onSignedOut();
+  });
+  document.addEventListener("visibilitychange",async()=>{
+    if(document.visibilityState==="visible"&&user){await Promise.all([pullPlan(),loadGroup()]);safeRender()}
+  });
+}
+async function updateProfile(fields){
+  if(!user)return;
+  Object.assign(profile,fields);
+  const me=members.find(x=>x.id===user.id);if(me)Object.assign(me,fields);
+  await sb.from("profiles").update(Object.assign({updated_at:new Date().toISOString()},fields)).eq("id",user.id);
+}
+let deferred=false;
+function safeRender(){const a=document.activeElement;
+  if(a&&(a.tagName==="TEXTAREA"||(a.tagName==="INPUT"&&a.type==="text"))){deferred=true;return}
+  render();}
+document.addEventListener("focusout",()=>{if(deferred){deferred=false;setTimeout(render,0)}});
+
+/* ---------- planning ---------- */
+function preset(id){return PRESETS.find(p=>p.id===id)}
+function subjInfo(id){
+  const s=state.subjects[id]||{};const p=preset(id);
+  let h=p?p.h:null;
+  if(h==null){const customs=Object.keys(state.subjects).filter(k=>!preset(k));h=CUSTOM_HUES[Math.max(0,customs.indexOf(id))%CUSTOM_HUES.length]}
+  return {id,name:s.name||(p&&p.name)||"Subject",kind:p?p.kind:"humanities",h,w:+s.w||1,on:!!s.on&&!s.deleted,mock:+s.mock||0,target:+s.target||0,
+    topics:(s.topics&&s.topics.length)?s.topics:["Revision from your notes"],exams:p?p.exams:["Past paper questions"],why:p?p.why:"Your own subject. Set the weight and topics to suit."};
+}
+function activeSubjects(){return Object.keys(state.subjects).filter(id=>{const s=state.subjects[id];return s.on&&!s.deleted}).sort((a,b)=>(state.subjects[a].order||0)-(state.subjects[b].order||0)).map(subjInfo)}
+function phaseAt(date,segs){segs=segs||segments();return segs.find(p=>date>=p.from&&date<p.to)||segs[segs.length-1]||Object.assign({k:"L"},PH.L)}
+function gradeMult(s){return s.mock&&s.target?Math.max(.7,Math.min(1.8,1+.2*(s.target-s.mock))):1}
+function effW(s,k){return k==="M"||k==="X"?s.w:s.w*gradeMult(s)}
+function blocksFor(dIdx,k){
+  const st=state.settings;
+  if(k==="X")return [{m:st.longDay===dIdx?Math.min(60,st.longMin):Math.min(+st.sessionMin,30)}];
+  if(st.longDay===dIdx&&st.days[dIdx]){const a=Math.round(st.longMin/2/5)*5;return [{m:a,exam:true,long:true},{m:st.longMin-a,long:true}]}
+  return Array.from({length:+st.perNight||1},()=>({m:+st.sessionMin}));
+}
+function buildPlan(){
+  const st=state.settings,subs=activeSubjects(),byId={};subs.forEach(s=>byId[s.id]=s);
+  const segs=segments(),gsched=groupSchedule();
+  const credit={},count={},ecount={};subs.forEach(s=>{credit[s.id]=0;count[s.id]=0;ecount[s.id]=0});
+  let lastDay=[];const slots=[];
+  const start=parse(st.start),end=parse(st.exam);
+  for(let d=new Date(start);d<end;d=addDays(d,1)){
+    const di=dow(d),wk=ymd(mondayOf(d));
+    if(!st.days[di]||state.restWeeks[wk])continue;
+    const ph=phaseAt(d,segs),ds=ymd(d),blocks=blocksFor(di,ph.k),today=[];
+    const wts=subs.map(s=>effW(s,ph.k)),W=wts.reduce((a,x)=>a+x,0)||1;
+    blocks.forEach((b,i)=>{
+      const key=ds+"_"+i,rec=state.done[key],sw=state.swaps[key];
+      subs.forEach((s,j)=>credit[s.id]+=wts[j]/W*b.m);
+      let sid=null,together=null;
+      const g=i===0&&ph.k!=="X"&&gsched?gsched[ds]:null;
+      const gsid=g?mySubjectFor(g.k,g.n,byId):null;
+      if(rec&&rec.s){sid=rec.s;if(rec.g)together=rec.g}
+      else if(sw&&byId[sw])sid=sw;
+      else if(gsid){sid=gsid;together=g}
+      else if(subs.length){
+        let best=null,bv=-Infinity;
+        subs.forEach(s=>{let v=credit[s.id];
+          if(today.includes(s.id))v-=1e4;
+          if(lastDay.includes(s.id))v-=b.m*.6;
+          if(v>bv){bv=v;best=s.id}});
+        sid=best;
+      }
+      if(!sid)return;
+      const info=byId[sid]||subjInfo(sid);
+      let topic;
+      if(rec&&rec.t)topic=rec.t;
+      else if(together&&b.exam)topic=info.exams[together.n%info.exams.length];
+      else if(together)topic=info.topics[together.n%info.topics.length];
+      else if(b.exam)topic=info.exams[(ecount[sid]||0)%info.exams.length];
+      else topic=info.topics[(count[sid]||0)%info.topics.length];
+      if(byId[sid]){credit[sid]-=b.m;if(!together){if(b.exam)ecount[sid]++;else count[sid]++}}
+      today.push(sid);
+      slots.push({key,date:ds,d:new Date(d),i,m:rec&&rec.m?rec.m:b.m,exam:!!b.exam,long:!!b.long,sid,topic,done:!!rec,swapped:!!(sw&&!rec),phase:ph,together:together?{k:together.k,n:together.n}:null});
+    });
+    lastDay=today;
+  }
+  return slots;
+}
+
+/* ---------- helpers ---------- */
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const hrs=m=>{const h=m/60;return (Math.round(h*10)/10).toString().replace(/\.0$/,"")};
+const hm=m=>m>=60?(Math.floor(m/60)+"h"+(m%60?" "+(m%60)+"m":"")):m+" min";
+const TICK='<svg viewBox="0 0 24 24" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function steps(sl,info){
+  const m=sl.m,k=sl.phase.k;
+  if(k==="X"){const e=Math.max(5,Math.round(m*.15/5)*5);
+    return [[e,"Check tomorrow's mock. If it's a different subject, swap this session to it."],[m-2*e,"Quick recap only: key facts, formulas, quotes or vocab on flashcards. No new learning."],[e,"Pack your bag (pens, calculator, ruler) and get an early night."]]}
+  if(sl.exam){const prep=5,mark=Math.max(10,Math.round(m*.25/5)*5);
+    return [[prep,"Get the paper, mark scheme and a timer ready."],[m-prep-mark,EXAMACT[sl.phase.k]],[mark,"Mark it. Write down two things to fix next time."]]}
+  const warm=Math.max(5,Math.round(m*.12/5)*5),check=Math.max(5,Math.round(m*.2/5)*5);
+  const main=k==="R"?"If your "+info.name+" mock is back, go through it: redo every question you dropped marks on and add weak topics to your fix list. If it isn't back yet: "+ACT[info.kind].L:ACT[info.kind][k];
+  if(sl.together)return [[warm,"Brain dump on your own: everything you already know about this. Then compare lists."],[m-warm-check,main+" Work side by side (or on a call) and help each other with anything stuck."],[check,"Quiz each other: take turns asking 5 questions each. Star anything either of you got wrong."]];
+  return [[warm,"Brain dump: write down everything you already know about this. No notes."],[m-warm-check,main],[check,"Test yourself: cover it up and recall, or check answers. Star anything still shaky."]];
+}
+function subjStyle(info){return 'class="s" style="--h:'+info.h+'"'}
+
+/* ---------- views ---------- */
+let tab="tonight",weekOffset=0,timer={key:null,left:0,endAt:0,running:false},confirmReset=false,openSwap=null;
+const VALID=["tonight","week","buddies","progress","setup"];
+if(VALID.includes(location.hash.slice(1)))tab=location.hash.slice(1);
+
+function header(plan){
+  const t=todayD(),ex=parse(state.settings.exam),days=dayDiff(t,ex);
+  const el=document.getElementById("countdown");
+  const ms=state.settings.mockStart?parse(state.settings.mockStart):null,md=ms?dayDiff(t,ms):0;
+  const mockTxt=ms&&md>0?'<b class="mono">'+md+'</b> days until mocks ('+DAYS[dow(ms)]+' '+fmt(ms)+') · ':'';
+  if(days>0)el.innerHTML=mockTxt+'<b class="mono">'+days+'</b> days ('+Math.floor(days/7)+' weeks) until GCSEs start, '+DAYS_LONG[dow(ex)]+' '+fmt(ex)+' '+ex.getFullYear()+' · <span class="mono">'+hm(weeklyMinutes())+'</span> a week';
+  else el.textContent="Exam season. Good luck!";
+}
+function weeklyMinutes(){const st=state.settings;let m=0;for(let i=0;i<7;i++)if(st.days[i])m+=blocksFor(i).reduce((a,b)=>a+b.m,0);return m}
+
+function sessionCard(sl,big){
+  const info=subjInfo(sl.sid),st=steps(sl,info);
+  const timerRunning=timer.key===sl.key;
+  const left=timerRunning?timer.left:sl.m*60;
+  const subs=activeSubjects().filter(s=>s.id!==sl.sid);
+  const names=buddyNames();
+  return '<article '+subjStyle(info)+'><div class="card big">'+
+   '<div class="meta"><span class="pill c">'+(sl.exam?"Exam practice":sl.long?"Long session, part 2":sl.phase.name)+'</span><span class="pill mono">'+sl.m+' min</span>'+(sl.long&&!sl.exam?'':(sl.long?'<span class="pill">Long session, part 1</span>':''))+(sl.together&&names.length?'<span class="pill together">Together with '+esc(listNames(names))+'</span>':'')+'</div>'+
+   '<h2 class="subj">'+esc(info.name)+'</h2>'+
+   '<div class="topic">'+esc(sl.topic)+'</div>'+
+   (sl.together&&names.length&&sl.date===ymd(todayD())?buddyStrip():'')+
+   '<ol class="steps">'+st.map(s=>'<li><span class="mins">'+s[0]+' min</span><span>'+esc(s[1])+'</span></li>').join("")+'</ol>'+
+   (sl.long&&sl.exam?'<div class="tip">Take a 10-minute break before part 2.</div>':'')+
+   '<div class="timer-row"><span class="timer" id="t-'+sl.key+'">'+clock(left)+'</span>'+
+     '<button class="btn small" data-act="timer" data-key="'+sl.key+'" data-m="'+sl.m+'">'+(timerRunning&&timer.running?"Pause":timerRunning?"Resume":"Start timer")+'</button>'+
+     (timerRunning?'<button class="btn small ghost" data-act="timer-reset">Reset</button>':'')+'</div>'+
+   '<div class="actions"><button class="btn '+(sl.done?"done":"primary")+'" data-act="done" data-key="'+sl.key+'">'+(sl.done?"Done ✓ (tap to undo)":"Mark as done")+'</button>'+
+     (sl.done||sl.phase.k==="X"?'':'<button class="btn" data-act="swapopen" data-key="'+sl.key+'">Swap subject</button>')+'</div>'+
+   ((openSwap===sl.key||sl.phase.k==="X")&&!sl.done?'<div class="field"><span class="lab">'+(sl.phase.k==="X"?'Mock tomorrow? Switch to that subject':'Do a different subject tonight')+'</span><div class="swaps">'+subs.map(s=>'<button data-act="swap" data-key="'+sl.key+'" data-sid="'+s.id+'" '+subjStyle(s)+'><span class="dot"></span>'+esc(s.name)+'</button>').join("")+(sl.swapped?'<button data-act="swap" data-key="'+sl.key+'" data-sid="">Back to the plan</button>':'')+'</div><div class="tip">The rest of the plan rebalances so every subject still gets its share.</div></div>':'')+
+  '</div></article>';
+}
+function clock(s){s=Math.max(0,Math.round(s));return pad(Math.floor(s/60))+":"+pad(s%60)}
+
+function row(sl){
+  const info=subjInfo(sl.sid),st=steps(sl,info);
+  return '<div class="row s'+(sl.done?' isdone':'')+'" style="--h:'+info.h+'">'+
+   '<button class="tick" data-act="done" data-key="'+sl.key+'" aria-pressed="'+sl.done+'" aria-label="Mark '+esc(info.name)+' done">'+TICK+'</button>'+
+   '<details'+(openSwap===sl.key?' open':'')+'><summary><span class="rt">'+esc(info.name)+(sl.exam?' <span class="pill c">Exam practice</span>':'')+(sl.together&&members.length>1?' <span class="pill together">Together</span>':'')+' <span class="pill mono">'+sl.m+' min</span></span><span class="rs">'+esc(sl.topic)+'</span></summary>'+
+   '<div class="more"><ol class="steps">'+st.map(s=>'<li><span class="mins">'+s[0]+' min</span><span>'+esc(s[1])+'</span></li>').join("")+'</ol>'+
+   (sl.done?'':'<div class="swaps">'+activeSubjects().filter(s=>s.id!==sl.sid).map(s=>'<button data-act="swap" data-key="'+sl.key+'" data-sid="'+s.id+'" '+subjStyle(s)+'><span class="dot"></span>'+esc(s.name)+'</button>').join("")+(sl.swapped?'<button data-act="swap" data-key="'+sl.key+'" data-sid="">Back to the plan</button>':'')+'</div><div class="tip">Tap a subject above to swap this session.</div>')+
+   '</div></details></div>';
+}
+
+function viewTonight(plan){
+  const t=ymd(todayD());
+  const todays=plan.filter(s=>s.date===t);
+  let h='';
+  if(!plan.length)return '<section><div class="card"><h2>No sessions yet</h2><p class="muted">Switch on at least one subject and one study day in Set up.</p></div></section>';
+  if(t<state.settings.start){
+    const first=plan.filter(s=>s.date===plan[0].date);
+    h+='<section><div class="sec-h"><h2>The plan starts '+DAYS_LONG[dow(parse(plan[0].date))]+' '+fmt(parse(plan[0].date))+'</h2></div><p class="calm muted">Nothing to do yet. Here is the first session so it isn\'t a surprise.</p>'+first.map(s=>sessionCard(s)).join("")+'</section>';
+    return h+upcoming(plan,plan[0].date);
+  }
+  if(todays.length){
+    const left=todays.filter(s=>!s.done).length;
+    h+='<section><div class="sec-h"><h2>'+(left?'Tonight: just <span class="hl">'+(todays.length>1?'this':'this one')+'</span>':'All done <span class="hl">tonight</span>')+'</h2><span class="muted">'+DAYS_LONG[dow(todayD())]+' '+fmt(todayD())+'</span></div>'+
+      (left?'<p class="calm muted">Don\'t look at the whole list. This is the only thing to do today.</p>':'<p class="calm">Nice work. That\'s today done. Rest of the evening is yours.</p>')+
+      todays.map(s=>sessionCard(s)).join("")+'</section>';
+  }else{
+    const next=plan.find(s=>s.date>t);
+    h+='<section><div class="card"><span class="eyebrow">'+DAYS_LONG[dow(todayD())]+' '+fmt(todayD())+'</span><h2 class="subj" style="font-size:1.9rem">Night <span class="hl">off</span></h2><p class="calm muted">No revision today. Rest is part of the plan.'+(next?' Next up: <b>'+esc(subjInfo(next.sid).name)+'</b> on '+DAYS_LONG[dow(next.d)]+'.':'')+'</p></div></section>';
+  }
+  // optional catch-up
+  const wkAgo=ymd(addDays(todayD(),-7));
+  const missed=plan.filter(s=>s.date<t&&s.date>=wkAgo&&!s.done);
+  if(missed.length&&phaseAt(todayD()).k!=="X")h+='<section><div class="sec-h"><h2>Missed this week</h2><span class="muted">Optional</span></div><p class="muted" style="margin:0">Only if you have spare energy. The plan already moves on without them.</p><div class="rows">'+missed.slice(0,3).map(row).join("")+'</div></section>';
+  return h+upcoming(plan,t);
+}
+function upcoming(plan,t){
+  const next=plan.filter(s=>s.date>t).slice(0,4);
+  if(!next.length)return '';
+  return '<section><div class="sec-h"><h2>Coming up</h2></div><div class="rows">'+next.map(s=>{const i=subjInfo(s.sid);return '<div class="row s" style="--h:'+i.h+'"><span class="dot" style="margin-top:8px"></span><div><span class="rt">'+DAYS[dow(s.d)]+' '+fmt(s.d)+' · '+esc(i.name)+' <span class="pill mono">'+s.m+' min</span></span><span class="rs">'+esc(s.topic)+'</span></div></div>'}).join("")+'</div></section>';
+}
+
+function viewWeek(plan){
+  const base=addDays(mondayOf(todayD()),weekOffset*7),wk=ymd(base),isRest=!!state.restWeeks[wk];
+  const ph=phaseAt(base),end=addDays(base,6);
+  const startD=parse(state.settings.start),exD=parse(state.settings.exam);
+  const inRange=end>=startD&&base<exD;
+  let h='<section><div class="weeknav"><button class="btn small" data-act="wk" data-d="-1" aria-label="Previous week">‹ Prev</button><div class="wk"><b>'+fmt(base)+' – '+fmt(end)+'</b><span class="muted" style="font-size:.85rem">'+(weekOffset===0?'This week':weekOffset===1?'Next week':weekOffset===-1?'Last week':'')+(inRange?' · '+ph.name:'')+'</span></div><button class="btn small" data-act="wk" data-d="1" aria-label="Next week">Next ›</button></div>'+
+   (weekOffset!==0?'<button class="btn small ghost" data-act="wk" data-d="0" style="align-self:center">Back to this week</button>':'');
+  if(inRange)h+='<div class="rest-banner"><span>'+(isRest?'<b>Rest week.</b> No sessions planned; the rest of the plan absorbs it.':'Holiday, trip or busy week?')+'</span><button class="btn small" data-act="rest" data-wk="'+wk+'">'+(isRest?'Plan this week again':'Make it a rest week')+'</button></div>';
+  h+='<div class="rows" style="gap:12px">';
+  const t=ymd(todayD());
+  for(let i=0;i<7;i++){
+    const d=addDays(base,i),ds=ymd(d),sl=plan.filter(s=>s.date===ds);
+    h+='<div class="day'+(ds===t?' today':'')+'"><div class="dl"><b>'+DAYS[i]+'</b><span class="muted mono" style="font-size:.8rem">'+fmt(d)+'</span></div><div class="rows">'+
+      (sl.length?sl.map(row).join(""):'<div class="off">'+(!inRange||d<startD||d>=exD?'Outside the plan':isRest?'Rest week':'Night off')+'</div>')+'</div></div>';
+  }
+  h+='</div></section>';
+  return h;
+}
+
+function viewProgress(plan){
+  const t=ymd(todayD());
+  const due=plan.filter(s=>s.date<=t),done=plan.filter(s=>s.done);
+  const pct=due.length?Math.round(done.filter(s=>s.date<=t).length/due.length*100):0;
+  const minsDone=done.reduce((a,s)=>a+s.m,0),minsAll=plan.reduce((a,s)=>a+s.m,0);
+  // streak of study days fully done, counting back from today (today only counts if done)
+  const byDay={};plan.forEach(s=>{(byDay[s.date]=byDay[s.date]||[]).push(s)});
+  const daysList=Object.keys(byDay).filter(d=>d<=t).sort().reverse();
+  let streak=0;for(const d of daysList){const all=byDay[d].every(s=>s.done);if(all)streak++;else if(d===t)continue;else break}
+  const r=46,C=2*Math.PI*r;
+  let h='<section><div class="card"><div class="ringwrap"><svg class="ring" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="'+pct+'% of sessions so far done"><circle cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--sunk)" stroke-width="12"/>'+(pct?'<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--brand)" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+(C*pct/100)+' '+C+'" transform="rotate(-90 60 60)"/>':'')+'<text x="60" y="68" text-anchor="middle" font-size="26">'+pct+'%</text></svg>'+
+   '<div style="flex:1;min-width:180px"><h2>Sessions done so far</h2><p class="muted" style="margin:.3em 0 0"><span class="mono">'+done.filter(s=>s.date<=t).length+'</span> of <span class="mono">'+due.length+'</span> sessions planned up to today. Anything above 80% is a strong term.</p></div></div></div>'+
+   '<div class="stats"><div class="stat"><span class="n">'+hrs(minsDone)+'h</span><span class="l">revised so far</span></div><div class="stat"><span class="n">'+streak+'</span><span class="l">study days in a row</span></div><div class="stat"><span class="n">'+hrs(minsAll-minsDone)+'h</span><span class="l">left in the plan</span></div></div></section>';
+  // phases
+  const st=state.settings,s0=parse(st.start),e0=parse(st.exam),span=e0-s0||1;
+  const f=Math.max(0,Math.min(1,(todayD()-s0)/span)),segs=segments();
+  h+='<section><div class="sec-h"><h2>Where you are in the plan</h2></div><div class="phasebar">'+segs.map(p=>{const w=(p.to-p.from)/span*100;return '<div class="ph-'+p.k+'" style="width:'+w+'%" title="'+p.name+'">'+(w>=9?p.short:'')+'</div>'}).join("")+'<span class="nowmark" style="left:calc('+(f*100)+'% - 1px)" title="Today"></span></div>';
+  h+='<div class="phaselegend">'+segs.map(p=>'<div><b><span class="sw ph-'+p.k+'"></span>'+p.name+'</b><span class="muted mono" style="font-size:.82rem">'+fmt(p.from)+' – '+fmt(addDays(p.to,-1))+'</span><br>'+p.desc+'</div>').join("")+'</div></section>';
+  // subjects
+  const subs=activeSubjects();
+  const maxAll=Math.max(1,...subs.map(s=>plan.filter(x=>x.sid===s.id).reduce((a,x)=>a+x.m,0)));
+  h+='<section><div class="sec-h"><h2>By subject</h2><span class="muted" style="font-size:.85rem">Solid = done · tint = planned by today</span></div><div class="card bars">';
+  subs.forEach(s=>{
+    const mine=plan.filter(x=>x.sid===s.id),all=mine.reduce((a,x)=>a+x.m,0),dueM=mine.filter(x=>x.date<=t).reduce((a,x)=>a+x.m,0),got=mine.filter(x=>x.done).reduce((a,x)=>a+x.m,0);
+    const topicsDone=new Set(mine.filter(x=>x.done&&!x.exam).map(x=>x.topic)),nT=s.topics.length,cov=s.topics.filter(x=>topicsDone.has(x)).length;
+    const behind=dueM-got;
+    h+='<div '+subjStyle(s)+'><div class="bar-h"><b><span class="dot"></span>'+esc(s.name)+'</b><span class="muted mono">'+hrs(got)+' / '+hrs(all)+' h · '+cov+'/'+nT+' topics'+(behind>=90?' · <span style="color:var(--warn)">'+hrs(behind)+'h behind</span>':'')+'</span></div>'+
+      '<div class="track" style="width:'+(all/maxAll*100)+'%">'+(dueM?'<span class="due" style="width:'+(dueM/all*100)+'%"></span>':'')+(got?'<span class="got" style="width:'+(got/all*100)+'%"></span>':'')+'</div></div>';
+  });
+  h+='</div></section>';
+  return h;
+}
+
+/* ---------- study buddies ---------- */
+const listNames=a=>a.length<=1?(a[0]||""):a.slice(0,-1).join(", ")+" & "+a[a.length-1];
+function streakOf(plan){
+  const t=ymd(todayD()),byDay={};plan.forEach(s=>{(byDay[s.date]=byDay[s.date]||[]).push(s)});
+  let streak=0;for(const d of Object.keys(byDay).filter(d=>d<=t).sort().reverse()){if(byDay[d].every(s=>s.done))streak++;else if(d===t)continue;else break}
+  return streak;
+}
+function computeSummary(plan){
+  const t=ymd(todayD()),mon=ymd(mondayOf(todayD())),sun=ymd(addDays(mondayOf(todayD()),6));
+  const today=plan.filter(s=>s.date===t),week=plan.filter(s=>s.date>=mon&&s.date<=sun),tog=today.find(s=>s.together);
+  return {date:t,todayPlanned:today.length,todayDone:today.filter(s=>s.done).length,today:today.map(s=>subjInfo(s.sid).name),
+    together:tog?{s:subjInfo(tog.sid).name,done:tog.done}:null,weekPlanned:week.length,weekDone:week.filter(s=>s.done).length,streak:streakOf(plan)};
+}
+function publishSummary(plan){
+  if(!user||!profile||!group)return;
+  const s=computeSummary(plan),j=JSON.stringify(s);if(j===lastSummary)return;
+  lastSummary=j;clearTimeout(summaryT);summaryT=setTimeout(()=>updateProfile({summary:s}),1500);
+}
+function liveStudy(m){const s=m.studying;if(!s||!s.until)return null;const left=Math.round((Date.parse(s.until)-Date.now())/60000);return left>0?{subject:s.subject,left}:null}
+function memberStatus(m){
+  const live=liveStudy(m),s=m.summary,t=ymd(todayD());
+  if(live)return {cls:"live",text:"Studying now: "+live.subject+" · "+live.left+" min left"};
+  if(!s||s.date!==t)return {cls:"",text:"Hasn't opened the app today"};
+  if(!s.todayPlanned)return {cls:"",text:"Night off"};
+  if(s.todayDone>=s.todayPlanned)return {cls:"ok",text:"Done tonight ✓ ("+s.today.join(", ")+")"};
+  return {cls:"",text:"Tonight: "+s.today.join(", ")+" · not done yet"};
+}
+function buddyStrip(){
+  const t=ymd(todayD());
+  return '<div class="buddystrip">'+members.filter(m=>m.id!==user.id).map(m=>{
+    const live=liveStudy(m),s=m.summary&&m.summary.date===t?m.summary:null;
+    let txt=live?'studying now':!s?'hasn\'t opened the app yet':s.together&&s.together.done?'done ✓':s.together?'not started':'not on a together session';
+    if(s&&s.together&&!live)txt+=' ('+s.together.s+')';
+    return '<span class="'+(live?'live':s&&s.together&&s.together.done?'ok':'')+'"><b>'+esc(m.display_name||"Friend")+'</b> '+esc(txt)+'</span>';
+  }).join("")+'</div>';
+}
+let gErr="",gBusy=false,confirmLeave=false,authTab="in",authMsg="",authBusy=false;
+function viewBuddies(plan){
+  if(!ONLINE)return '<section><div class="card"><h2>Study buddies</h2><p class="muted" style="margin:0">Buddies need the app to be connected to its server. Follow SETUP.md to connect it, then you can sign in and join a friend.</p></div></section>';
+  if(!user)return '<section><div class="card"><h2>Study with a friend</h2><p class="muted" style="margin:0">Sign in to start a study group or join a friend\'s.</p><div><button class="btn primary" data-act="to-auth">Sign in or create an account</button></div></div></section>';
+  if(!group)return '<section><div class="sec-h"><h2>Study with a friend</h2></div><p class="muted" style="margin:0">Each of you keeps your own plan. On together nights you both get the same core subject, so you can revise it side by side or on a call.</p>'+
+    (gErr?'<p class="err">'+esc(gErr)+'</p>':'')+
+    '<div class="card"><h3>Start a group</h3><div class="field"><label for="g-name">Group name</label><input type="text" id="g-name" placeholder="e.g. Year 11 revision" maxlength="60"></div><div><button class="btn primary" data-act="gcreate"'+(gBusy?' disabled':'')+'>Create group</button></div><p class="tip" style="margin:0">You\'ll get a 6-letter code to send to your friend.</p></div>'+
+    '<div class="card"><h3>Join a friend\'s group</h3><div class="field"><label for="g-code">Invite code</label><input type="text" id="g-code" placeholder="e.g. K7QM2P" maxlength="6" autocapitalize="characters" autocomplete="off" class="mono"></div><div><button class="btn primary" data-act="gjoin"'+(gBusy?' disabled':'')+'>Join group</button></div></div></section>';
+  const gs=groupSettings(),sched=groupSchedule()||{},t=ymd(todayD());
+  let h='<section><div class="sec-h"><h2>'+esc(group.name)+'</h2><span class="muted">'+members.length+' member'+(members.length===1?'':'s')+'</span></div>'+
+    '<div class="card codecard"><div><span class="eyebrow">Invite code</span><div class="code mono">'+esc(group.code)+'</div></div><button class="btn small" data-act="gcopy">Copy code</button></div>'+
+    (members.length<2?'<p class="muted" style="margin:0">Send the code to your friend. They create an account, open Buddies and enter it.</p>':'')+
+    '<div class="rows">'+members.slice().sort((a,b)=>(a.id===user.id?-1:b.id===user.id?1:0)).map(m=>{const st=memberStatus(m),s=m.summary&&m.summary.date===t?m.summary:null;
+      return '<div class="buddy"><div class="bname"><span class="avatar">'+esc((m.display_name||"?").trim().charAt(0).toUpperCase())+'</span><b>'+esc(m.display_name||"Friend")+(m.id===user.id?' <span class="muted">(you)</span>':'')+'</b></div>'+
+        '<div class="bstat '+st.cls+'">'+esc(st.text)+'</div>'+
+        (m.summary?'<div class="bnums mono">'+m.summary.weekDone+'/'+m.summary.weekPlanned+' this week · '+m.summary.streak+'-day streak</div>':'')+'</div>'}).join("")+'</div></section>';
+  // together nights
+  const next=Object.keys(sched).filter(d=>d>=t).sort().slice(0,5);
+  h+='<section><div class="sec-h"><h2>Together nights</h2></div><p class="muted" style="margin:0">On these nights everyone\'s first session is the same subject. Each of you still gets the topic from your own list, so it matches when your lists match (same tier and board).</p>'+
+    '<div class="card"><div class="field"><span class="lab">Nights</span><div class="daychips">'+DAYS.map((d,i)=>'<button data-act="gday" data-i="'+i+'" aria-pressed="'+!!gs.days[i]+'">'+d+'</button>').join("")+'</div></div>'+
+    '<div class="field"><span class="lab">Subjects you line up on</span><div class="corelist">'+CORE.map(c=>{const v=gs.core[c.k]||{on:false,w:c.w};
+      return '<div class="corerow"><span>'+esc(c.name)+'</span>'+(v.on?'<span class="stepper"><button data-act="gw" data-k="'+c.k+'" data-d="-0.5" aria-label="Fewer '+esc(c.name)+' nights">−</button><span>'+v.w+'</span><button data-act="gw" data-k="'+c.k+'" data-d="0.5" aria-label="More '+esc(c.name)+' nights">+</button></span>':'')+'<button class="switch" role="switch" aria-checked="'+!!v.on+'" data-act="gon" data-k="'+c.k+'" aria-label="Line up on '+esc(c.name)+'"></button></div>'}).join("")+'</div></div>'+
+    '<p class="tip" style="margin:0">Changes here apply to everyone in the group. Together nights only count on nights you\'ve also set as study days, and they pause during your mock weeks.</p></div>';
+  if(next.length)h+='<div class="rows">'+next.map(d=>{const g=sched[d],c=CORE.find(x=>x.k===g.k),mine=plan.find(s=>s.date===d&&s.i===0);
+    const ok=mine&&mine.together;return '<div class="row"><span class="dot" style="margin-top:8px;background:var(--good)"></span><div><span class="rt">'+DAYS[dow(parse(d))]+' '+fmt(parse(d))+' · '+esc(c?c.name:g.k)+'</span><span class="rs">'+(ok?esc(mine.topic):'Not in your plan that night (night off, rest week, mocks or you don\'t take it)')+'</span></div></div>'}).join("")+'</div>';
+  h+='</section><section><div class="card">'+(confirmLeave?'<div class="confirm"><b>Leave '+esc(group.name)+'?</b><button class="btn" style="border-color:var(--warn);color:var(--warn)" data-act="gleave-yes">Yes, leave</button><button class="btn ghost" data-act="gleave-no">Cancel</button></div>':'<div><button class="btn ghost" data-act="gleave">Leave group</button></div>')+'<p class="tip" style="margin:0">Your plan and progress stay yours. Group members only see your name, tonight\'s subjects, and your weekly and streak numbers.</p></div></section>';
+  return h;
+}
+function viewAuth(){
+  const up=authTab==="up";
+  return '<section class="authwrap"><div class="card"><div class="tabbar two" role="tablist"><button role="tab" data-act="authtab" data-t="in" aria-selected="'+!up+'">Sign in</button><button role="tab" data-act="authtab" data-t="up" aria-selected="'+up+'">Create account</button></div>'+
+    '<form id="authform" class="authform" novalidate>'+
+    (up?'<div class="field"><label for="a-name">Your first name</label><input type="text" id="a-name" autocomplete="given-name" maxlength="40" required></div>':'')+
+    '<div class="field"><label for="a-email">Email</label><input type="email" id="a-email" autocomplete="email" inputmode="email" required></div>'+
+    '<div class="field"><label for="a-pass">Password</label><input type="password" id="a-pass" autocomplete="'+(up?'new-password':'current-password')+'" minlength="8" required>'+(up?'<span class="tip">At least 8 characters.</span>':'')+'</div>'+
+    (authMsg?'<p class="err">'+esc(authMsg)+'</p>':'')+
+    '<button class="btn primary" type="submit"'+(authBusy?' disabled':'')+'>'+(authBusy?'One moment…':up?'Create account':'Sign in')+'</button></form>'+
+    '<button class="btn ghost small" data-act="offline">Use without an account on this device</button></div></section>';
+}
+async function submitAuth(){
+  const email=(document.getElementById("a-email").value||"").trim(),pass=document.getElementById("a-pass").value||"";
+  const nameEl=document.getElementById("a-name"),name=nameEl?(nameEl.value||"").trim():"";
+  if(!email||!pass){authMsg="Enter your email and password.";return render()}
+  if(authTab==="up"&&!name){authMsg="Enter your first name so your friends know it's you.";return render()}
+  if(authTab==="up"&&pass.length<8){authMsg="Use a password of at least 8 characters.";return render()}
+  authBusy=true;authMsg="";render();
+  let res;
+  if(authTab==="up")res=await sb.auth.signUp({email,password:pass,options:{data:{display_name:name}}});
+  else res=await sb.auth.signInWithPassword({email,password:pass});
+  authBusy=false;
+  if(res.error){const m=res.error.message||"";
+    authMsg=/already registered/i.test(m)?"There's already an account with that email. Sign in instead.":/invalid login/i.test(m)?"That email and password don't match. Check them and try again.":/signups? not allowed/i.test(m)?"New accounts are switched off. Ask whoever runs this app to let you in.":m||"That didn't work. Check your connection and try again.";
+    return render()}
+  if(authTab==="up"&&!res.data.session){authTab="in";authMsg="Account created. Check your email for a confirmation link, then sign in.";return render()}
+  authMsg="";
+}
+async function groupCall(fn,args){
+  gBusy=true;gErr="";render();
+  const {data,error}=await sb.rpc(fn,args);
+  gBusy=false;
+  if(error){gErr=/no group/i.test(error.message)?"There's no group with that code. Check it and try again.":/full/i.test(error.message)?"That group is full.":"That didn't work. Check your connection and try again.";render();return null}
+  return data;
+}
+
+function viewSetup(plan){
+  const st=state.settings,wm=weeklyMinutes();
+  const subs=Object.keys(state.subjects).filter(id=>!state.subjects[id].deleted).sort((a,b)=>(state.subjects[a].order||0)-(state.subjects[b].order||0)).map(subjInfo);
+  const act=subs.filter(s=>s.on),W=act.reduce((a,s)=>a+s.w,0);
+  const minsBy={};plan.forEach(s=>minsBy[s.sid]=(minsBy[s.sid]||0)+s.m);
+  let h='';
+  if(ONLINE&&user)h+='<section><div class="sec-h"><h2>Your account</h2></div><div class="card"><div class="field"><label for="f-dname">Your name (what study buddies see)</label><input type="text" id="f-dname" maxlength="40" value="'+esc(profile?profile.display_name:"")+'"></div><div class="acct"><span class="muted">Signed in as '+esc(user.email||"")+'</span><button class="btn small" data-act="signout">Sign out</button></div></div></section>';
+  else if(ONLINE)h+='<section><div class="card"><h2>Not signed in</h2><p class="muted" style="margin:0">Your plan is only saved on this device. Sign in to sync it across your phone and tablet and to study with friends.</p><div><button class="btn primary" data-act="to-auth">Sign in or create an account</button></div></div></section>';
+  h+='<section><div class="sec-h"><h2>Week shape</h2><span class="muted">'+hm(wm)+' a week</span></div><div class="card">'+
+   '<div class="field"><span class="lab">Study days</span><div class="daychips">'+DAYS.map((d,i)=>'<button data-act="day" data-i="'+i+'" aria-pressed="'+!!st.days[i]+'">'+d+'</button>').join("")+'</div></div>'+
+   '<div class="grid2">'+
+    '<div class="field"><label for="f-long">Long session day</label><select id="f-long"><option value="-1">No long session</option>'+DAYS_LONG.map((d,i)=>st.days[i]?'<option value="'+i+'"'+(st.longDay===i?' selected':'')+'>'+d+'</option>':'').join("")+'</select></div>'+
+    '<div class="field"><label for="f-longm">Long session length</label><select id="f-longm">'+[60,90,120,150,180].map(m=>'<option value="'+m+'"'+(st.longMin===m?' selected':'')+'>'+hm(m)+'</option>').join("")+'</select></div>'+
+    '<div class="field"><label for="f-sess">Other nights: session length</label><select id="f-sess">'+[25,30,40,45,50,60].map(m=>'<option value="'+m+'"'+(st.sessionMin===m?' selected':'')+'>'+m+' min</option>').join("")+'</select></div>'+
+    '<div class="field"><label for="f-per">Sessions per night</label><select id="f-per">'+[1,2].map(m=>'<option value="'+m+'"'+(+st.perNight===m?' selected':'')+'>'+m+(m===2?' (different subjects)':'')+'</option>').join("")+'</select></div>'+
+    '<div class="field"><label for="f-start">Plan starts</label><input type="date" id="f-start" value="'+st.start+'"></div>'+
+    '<div class="field"><label for="f-exam">First GCSE exam</label><input type="date" id="f-exam" value="'+st.exam+'"></div>'+
+    '<div class="field"><label for="f-mstart">Mocks start</label><input type="date" id="f-mstart" value="'+(st.mockStart||'')+'"></div>'+
+    '<div class="field"><label for="f-mend">Mocks end</label><input type="date" id="f-mend" value="'+(st.mockEnd||'')+'"></div>'+
+   '</div><p class="tip" style="margin:0">During the mocks, sessions drop to 30 minutes (60 on the long day) for recapping the next day\'s subject. Clear the mock dates if you have no mocks. The GCSE date is an estimate: summer GCSEs usually start in the second week of May. Swap in the real date once your school publishes the timetable. The French speaking exam and the Art 10-hour exam usually happen a few weeks earlier.</p></div></section>';
+  h+='<section><div class="sec-h"><h2>Subjects</h2><span class="muted">'+act.length+' on</span></div>'+
+   '<div class="note"><p><b>How the weighting works.</b> Each subject gets a share of sessions in proportion to its weight. The defaults follow how much exam there is and how much needs memorising: Combined Science is a double GCSE with 6 papers, Foundation Maths has 3 and a grade 4 matters, English Literature is closed-book with quotes for several texts, French has four skills and a long vocab list, and Art is mostly coursework done in class.</p><p>After the mocks, enter your mock and target grade for each subject. From then on, subjects with the biggest gap get more time automatically. You can also raise the weight of anything you find hard. Topics are based on the AQA specs (the most common board); edit them to match your texts and options.</p></div>';
+  subs.forEach(s=>{
+    const share=s.on&&W?Math.round(s.w/W*100):0;
+    h+='<div class="subjcard s'+(s.on?'':' offsub')+'" style="--h:'+s.h+'"><div class="subj-top"><span class="nm"><span class="dot"></span>'+esc(s.name)+'</span>'+
+     (s.on?'<span class="stepper"><button data-act="w" data-id="'+s.id+'" data-d="-0.5" aria-label="Lower weight">−</button><span>'+s.w+'</span><button data-act="w" data-id="'+s.id+'" data-d="0.5" aria-label="Raise weight">+</button></span>':'')+
+     '<button class="switch" role="switch" aria-checked="'+s.on+'" data-act="on" data-id="'+s.id+'" aria-label="Include '+esc(s.name)+'"></button></div>'+
+     (s.on?'<div class="subj-why"><span class="mono">'+share+'%</span> of sessions · about <span class="mono">'+hrs(minsBy[s.id]||0)+'h</span> before exams. '+esc(s.why)+'</div>':'<div class="subj-why">'+esc(s.why)+'</div>')+
+     (s.on?'<div class="grades">'+[["mock","Mock grade"],["target","Target"]].map(([f,l])=>'<label for="g-'+f+'-'+s.id+'">'+l+' <select id="g-'+f+'-'+s.id+'" data-grade="'+s.id+'" data-field="'+f+'"><option value="">–</option>'+[9,8,7,6,5,4,3,2,1].map(g=>'<option value="'+g+'"'+(s[f]===g?' selected':'')+'>'+g+'</option>').join("")+'</select></label>').join("")+
+       (s.mock&&s.target?'<span class="muted">'+(gradeMult(s)>1?'Gets ×'+gradeMult(s).toFixed(1)+' more time after mocks':gradeMult(s)<1?'On track: ×'+gradeMult(s).toFixed(1)+' time after mocks':'On target')+'</span>':'')+'</div>':'')+
+     '<details><summary>Edit name & topics ('+s.topics.length+')</summary><div class="field"><label for="n-'+s.id+'">Name</label><input type="text" id="n-'+s.id+'" data-name="'+s.id+'" value="'+esc(s.name)+'"></div><div class="field" style="margin-top:8px"><label for="tp-'+s.id+'">Topics, one per line (sessions cycle through them in order)</label><textarea id="tp-'+s.id+'" data-topics="'+s.id+'">'+esc(s.topics.join("\n"))+'</textarea></div>'+
+     (preset(s.id)?'':'<button class="btn small ghost" data-act="del" data-id="'+s.id+'" style="margin-top:8px;align-self:flex-start">Remove subject</button>')+'</details></div>';
+  });
+  h+='<div class="subjcard"><div class="field"><label for="f-new">Add another subject</label><div style="display:flex;gap:8px"><input type="text" id="f-new" placeholder="e.g. Spanish, Music, Business"><button class="btn primary" data-act="add">Add</button></div></div></div></section>';
+  h+='<section><div class="sec-h"><h2>Start over</h2></div><div class="card"><p style="margin:0" class="muted">Clears every tick and swap. Settings and subjects stay.</p>'+
+   (confirmReset?'<div class="confirm"><b>Clear all progress?</b><button class="btn" style="border-color:var(--warn);color:var(--warn)" data-act="reset-yes">Yes, clear it</button><button class="btn ghost" data-act="reset-no">Cancel</button></div>':'<div><button class="btn" data-act="reset">Clear progress…</button></div>')+'</div></section>';
+  return h;
+}
+
+function render(){
+  const main=document.getElementById("main"),nav=document.querySelector("nav.tabs");
+  if(ONLINE&&authMode==="pending"){nav.hidden=true;main.innerHTML='<section><p class="muted">Loading your plan…</p></section>';return}
+  if(ONLINE&&authMode==="out"&&!offlineChosen){nav.hidden=true;document.getElementById("countdown").textContent="Sign in to sync your plan across devices and study with friends.";main.innerHTML=viewAuth();return}
+  nav.hidden=false;
+  const plan=buildPlan();
+  header(plan);
+  document.querySelectorAll(".tabbar button[data-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===tab)));
+  const v={tonight:viewTonight,week:viewWeek,buddies:viewBuddies,progress:viewProgress,setup:viewSetup}[tab];
+  main.innerHTML=v(plan);
+  publishSummary(plan);
+}
+setInterval(()=>{if(members.some(m=>m.studying))safeRender()},30000);
+
+/* ---------- events ---------- */
+document.querySelector(".tabbar").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(!b)return;tab=b.dataset.tab;openSwap=null;confirmReset=false;try{history.replaceState(null,"","#"+tab)}catch(_){location.hash=tab}render();window.scrollTo(0,0)});
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(VALID.includes(h)&&h!==tab){tab=h;render()}});
+
+document.getElementById("main").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,key=b.dataset.key;
+  if(a==="done"){e.preventDefault();
+    const plan=buildPlan(),sl=plan.find(s=>s.key===key);if(!sl)return;
+    if(state.done[key])commit({done:{[key]:null}});
+    else{commit({done:{[key]:{s:sl.sid,t:sl.topic,m:sl.m,at:ymd(todayD()),g:sl.together||null}}});if(timer.key===key)stopTimer()}
+    openSwap=null;render();
+  }
+  else if(a==="swapopen"){openSwap=openSwap===key?null:key;render()}
+  else if(a==="swap"){openSwap=null;commit({swaps:{[key]:b.dataset.sid||null}})}
+  else if(a==="wk"){const d=+b.dataset.d;weekOffset=d===0?0:weekOffset+d;render()}
+  else if(a==="rest"){const wk=b.dataset.wk;commit({restWeeks:{[wk]:!state.restWeeks[wk]}})}
+  else if(a==="day"){const i=+b.dataset.i,days=state.settings.days.slice();days[i]=days[i]?0:1;const p={settings:{days}};if(!days[i]&&state.settings.longDay===i)p.settings.longDay=-1;commit(p)}
+  else if(a==="w"){const id=b.dataset.id,s=state.subjects[id];const w=Math.max(.5,Math.min(10,(+s.w||1)+(+b.dataset.d)));commit({subjects:{[id]:{w}}})}
+  else if(a==="on"){const id=b.dataset.id;commit({subjects:{[id]:{on:!state.subjects[id].on}}})}
+  else if(a==="add"){const inp=document.getElementById("f-new");const name=(inp.value||"").trim();if(!name){inp.focus();return}
+    const id="c"+Date.now().toString(36);const order=Object.keys(state.subjects).length+1;
+    commit({subjects:{[id]:{name,on:true,w:3,order,topics:["Topic 1 (edit me)","Topic 2","Topic 3","Past paper questions"]}}})}
+  else if(a==="del"){commit({subjects:{[b.dataset.id]:{deleted:true,on:false}}})}
+  else if(a==="reset"){confirmReset=true;render()}
+  else if(a==="reset-no"){confirmReset=false;render()}
+  else if(a==="reset-yes"){confirmReset=false;const done={},swaps={};Object.keys(state.done).forEach(k=>done[k]=null);Object.keys(state.swaps).forEach(k=>swaps[k]=null);commit({done,swaps})}
+  else if(a==="timer"){toggleTimer(key,+b.dataset.m)}
+  else if(a==="timer-reset"){stopTimer();render()}
+  else if(a==="to-auth"){offlineChosen=false;authMsg="";render()}
+  else if(a==="offline"){offlineChosen=true;setStatus("local");render()}
+  else if(a==="authtab"){authTab=b.dataset.t;authMsg="";render()}
+  else if(a==="signout"){sb.auth.signOut()}
+  else if(a==="gcreate"){const name=(document.getElementById("g-name").value||"").trim()||"Study group";
+    const gs=defaultGroupSettings();gs.start=ymd(mondayOf(todayD()));
+    groupCall("create_group",{p_name:name,p_settings:gs}).then(async d=>{if(!d)return;profile.group_id=d.id;await loadGroup();subscribe();render()})}
+  else if(a==="gjoin"){const code=(document.getElementById("g-code").value||"").trim().toUpperCase();if(code.length<6){gErr="Invite codes are 6 characters.";return render()}
+    groupCall("join_group",{p_code:code}).then(async d=>{if(!d)return;profile.group_id=d.id;await loadGroup();subscribe();render()})}
+  else if(a==="gleave"){confirmLeave=true;render()}
+  else if(a==="gleave-no"){confirmLeave=false;render()}
+  else if(a==="gleave-yes"){confirmLeave=false;groupCall("leave_group",{}).then(()=>{if(gErr)return;profile.group_id=null;group=null;members=[];lastSummary="";subscribe();render()})}
+  else if(a==="gcopy"){const code=group.code;const done=()=>{b.textContent="Copied";setTimeout(()=>{b.textContent="Copy code"},1500)};
+    try{navigator.clipboard.writeText(code).then(done,()=>{b.textContent=code})}catch(_){b.textContent=code}}
+  else if(a==="gday"||a==="gon"||a==="gw"){
+    const gs=groupSettings();
+    if(a==="gday"){const i=+b.dataset.i;gs.days[i]=gs.days[i]?0:1}
+    else if(a==="gon"){const k=b.dataset.k;gs.core[k].on=!gs.core[k].on}
+    else{const k=b.dataset.k;gs.core[k].w=Math.max(.5,Math.min(10,(+gs.core[k].w||1)+(+b.dataset.d)))}
+    group.settings=gs;render();
+    sb.from("groups").update({settings:gs}).eq("id",group.id).then(({error})=>{if(error){gErr="Couldn't save the group change. Check your connection.";render()}});
+  }
+});
+document.getElementById("main").addEventListener("submit",e=>{if(e.target.id==="authform"){e.preventDefault();submitAuth()}});
+document.getElementById("main").addEventListener("change",e=>{
+  const t=e.target,st=state.settings;
+  if(t.id==="f-long")commit({settings:{longDay:+t.value}});
+  else if(t.id==="f-longm")commit({settings:{longMin:+t.value}});
+  else if(t.id==="f-sess")commit({settings:{sessionMin:+t.value}});
+  else if(t.id==="f-per")commit({settings:{perNight:+t.value}});
+  else if(t.id==="f-start"&&t.value&&t.value<st.exam)commit({settings:{start:t.value}});
+  else if(t.id==="f-exam"&&t.value&&t.value>st.start)commit({settings:{exam:t.value}});
+  else if(t.id==="f-mstart")commit({settings:{mockStart:t.value||""}});
+  else if(t.id==="f-mend")commit({settings:{mockEnd:t.value||""}});
+  else if(t.dataset.grade){commit({subjects:{[t.dataset.grade]:{[t.dataset.field]:t.value?+t.value:null}}})}
+  else if(t.dataset.topics){const id=t.dataset.topics;const topics=t.value.split("\n").map(x=>x.trim()).filter(Boolean);commit({subjects:{[id]:{topics}}})}
+  else if(t.dataset.name){const id=t.dataset.name;const name=t.value.trim();if(name)commit({subjects:{[id]:{name}}})}
+  else if(t.id==="f-dname"){const name=t.value.trim().slice(0,40);if(name)updateProfile({display_name:name}).then(render)}
+});
+document.getElementById("main").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="f-new"){e.preventDefault();document.querySelector('[data-act="add"]').click()}});
+
+/* ---------- timer ---------- */
+let tick=null,wake=null;
+function toggleTimer(key,m){
+  if(timer.key!==key){stopTimer();timer={key,left:m*60,endAt:0,running:false}}
+  if(timer.running){timer.left=(timer.endAt-Date.now())/1000;timer.running=false;clearInterval(tick);releaseWake()}
+  else{timer.endAt=Date.now()+timer.left*1000;timer.running=true;clearInterval(tick);tick=setInterval(step,500);
+    try{navigator.wakeLock&&navigator.wakeLock.request("screen").then(w=>wake=w).catch(()=>{})}catch(_){}}
+  presence();
+  render();
+}
+/* tell study buddies when a timer is running */
+let presenceOn=false;
+function presence(){
+  if(!user||!group)return;
+  if(timer.running&&timer.key){const sl=buildPlan().find(s=>s.key===timer.key);
+    presenceOn=true;updateProfile({studying:{until:new Date(timer.endAt).toISOString(),subject:sl?subjInfo(sl.sid).name:"Revision"}})}
+  else if(presenceOn){presenceOn=false;updateProfile({studying:null})}
+}
+function step(){
+  if(!timer.running)return;
+  timer.left=(timer.endAt-Date.now())/1000;
+  const el=document.getElementById("t-"+timer.key);
+  if(timer.left<=0){timer.left=0;timer.running=false;clearInterval(tick);releaseWake();if(el)el.textContent="Time's up";const b=document.querySelector('[data-act="timer"][data-key="'+timer.key+'"]');if(b)b.textContent="Restart";timer.key=null;presence();return}
+  if(el)el.textContent=clock(timer.left);
+}
+function stopTimer(){clearInterval(tick);timer={key:null,left:0,endAt:0,running:false};releaseWake();presence()}
+function releaseWake(){try{wake&&wake.release()}catch(_){}wake=null}
+
+render();
+initServer();
+})();
+</script>
+
+</body>
+</html>

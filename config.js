@@ -4,6 +4,6 @@
 // in supabase/schema.sql are what keep each person's data private.
 // Leave both empty to use the app on one device without accounts.
 window.GCSE_CONFIG = {
-  supabaseUrl: "",      // e.g. "https://abcdefghijkl.supabase.co"
-  supabaseAnonKey: ""   // the publishable key (sb_publishable_...) or the legacy anon key
+  supabaseUrl: "https://uymrzzclitnseselxxri.supabase.co",
+  supabaseAnonKey: "sb_publishable_AT5PHqkR71-ne7gHH6sM5g_QN3cCmYu"
 };

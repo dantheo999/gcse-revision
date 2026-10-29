@@ -25,18 +25,12 @@
   --f-mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --r:14px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+@media (prefers-color-scheme: dark){:root:not([data-theme]){
   --bg:#0e1322; --surface:#161d31; --sunk:#1d2640; --ink:#e7ecf7; --muted:#9ba7c2; --line:#2a3452;
   --brand:#8ea3ff; --brand-ink:#0e1322; --hl:#d9bd2b; --hl-ink:#0e1322;
   --good:#5ccf93; --warn:#f0b04a;
   --sub-l:70%; --sub-s:65%; --tint-l:20%; --tint-s:35%; color-scheme:dark;
 }}
-:root[data-theme="dark"]{
-  --bg:#0e1322; --surface:#161d31; --sunk:#1d2640; --ink:#e7ecf7; --muted:#9ba7c2; --line:#2a3452;
-  --brand:#8ea3ff; --brand-ink:#0e1322; --hl:#d9bd2b; --hl-ink:#0e1322;
-  --good:#5ccf93; --warn:#f0b04a;
-  --sub-l:70%; --sub-s:65%; --tint-l:20%; --tint-s:35%; color-scheme:dark;
-}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
@@ -205,9 +199,40 @@ h3{font-size:1.1rem}
 input[type=email],input[type=password]{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
 .acct{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 button:disabled{opacity:.6;cursor:default}
+.themes{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.theme{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;text-align:left;font-size:.9rem}
+.theme[aria-pressed="true"]{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand)}
+.tsw{height:44px;border-radius:8px;border:1px solid;display:flex;align-items:flex-end;gap:5px;padding:6px}
+.tsw i{width:16px;height:16px;border-radius:50%}
+.theme .muted{font-size:.75rem;line-height:1.2}
 @media (max-width:360px){.tabbar button{font-size:.78rem}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
+<script>
+/* Colour themes, picked in Set up and saved with the plan. Classic is the palette above and follows the
+   device's light/dark mode; the others are fixed. The last choice is cached so the page opens in it. */
+const THEMES=[
+  {id:"classic",name:"Classic",note:"Light or dark to match the device",bg:"#f3f6fb",line:"#d8dfeb",brand:"#2742c4",hl:"#ffe24a"},
+  {id:"mint",name:"Mint",bg:"#eef7f2",surface:"#ffffff",sunk:"#dcede4",ink:"#12291f",muted:"#4a6559",line:"#cbe0d4",brand:"#0b6e6a",hl:"#ffd84d",warn:"#a35f00"},
+  {id:"sunset",name:"Sunset",bg:"#fdf3ec",surface:"#ffffff",sunk:"#f7e2d4",ink:"#2e1a12",muted:"#74543f",line:"#efd5c4",brand:"#b8364a",hl:"#ffd166",warn:"#a35f00"},
+  {id:"lavender",name:"Lavender",bg:"#f5f2fd",surface:"#ffffff",sunk:"#e8e1fa",ink:"#221a3a",muted:"#5e567c",line:"#dcd3f2",brand:"#6340cc",hl:"#a5efc9",warn:"#a35f00"},
+  {id:"midnight",name:"Midnight",dark:1,bg:"#0e1322",surface:"#161d31",sunk:"#1d2640",ink:"#e7ecf7",muted:"#9ba7c2",line:"#2a3452",brand:"#8ea3ff",hl:"#d9bd2b"},
+  {id:"cherry",name:"Cherry night",dark:1,bg:"#1a1016",surface:"#241820",sunk:"#30212a",ink:"#f6e9ef",muted:"#bfa0b0",line:"#3d2a35",brand:"#ff86b0",hl:"#f2c14e"}
+];
+(function(){
+  const css=THEMES.filter(t=>t.id!=="classic").map(t=>':root[data-theme="'+t.id+'"]{--bg:'+t.bg+';--surface:'+t.surface+';--sunk:'+t.sunk+';--ink:'+t.ink+';--muted:'+t.muted+';--line:'+t.line+';--brand:'+t.brand+';--hl:'+t.hl+';'+
+    (t.dark?'--brand-ink:'+t.bg+';--hl-ink:'+t.bg+';--good:#5ccf93;--warn:#f0b04a;--sub-l:70%;--sub-s:65%;--tint-l:20%;--tint-s:35%;color-scheme:dark}'
+           :'--brand-ink:#ffffff;--hl-ink:'+t.ink+';--good:#1d8a55;--warn:'+t.warn+';--sub-l:40%;--sub-s:62%;--tint-l:95%;--tint-s:70%;color-scheme:light}')).join("\n");
+  const st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
+})();
+function applyTheme(id){
+  const t=THEMES.find(x=>x.id===id)||THEMES[0],root=document.documentElement;
+  if(t.id==="classic")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t.id);
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t.id==="classic"?"#2742c4":t.dark?t.bg:t.brand;
+  try{localStorage.setItem("gcse-theme",t.id)}catch(e){}
+}
+try{applyTheme(localStorage.getItem("gcse-theme"))}catch(e){}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -421,7 +446,7 @@ function defaults(){
   const subjects={};
   PRESETS.forEach((p,i)=>{subjects[p.id]={name:p.name,on:p.on,w:p.w,topics:p.topics.slice(),order:i}});
   return {v:1,
-    settings:{start:"2026-11-02",exam:"2027-05-10",mockStart:"2026-11-16",mockEnd:"2026-11-27",days:[1,1,1,1,0,0,1],longDay:6,sessionMin:45,longMin:120,perNight:1},
+    settings:{start:"2026-11-02",exam:"2027-05-10",mockStart:"2026-11-16",mockEnd:"2026-11-27",days:[1,1,1,1,0,0,1],longDay:6,sessionMin:45,longMin:120,perNight:1,theme:"classic"},
     subjects, restWeeks:{"2026-12-21":true}, done:{}, swaps:{}};
 }
 const isObj=x=>x&&typeof x==="object"&&!Array.isArray(x);
@@ -872,6 +897,8 @@ function viewSetup(plan){
   let h='';
   if(ONLINE&&user)h+='<section><div class="sec-h"><h2>Your account</h2></div><div class="card"><div class="field"><label for="f-dname">Your name (what study buddies see)</label><input type="text" id="f-dname" maxlength="40" value="'+esc(profile?profile.display_name:"")+'"></div><div class="acct"><span class="muted">Signed in as '+esc(user.email||"")+'</span><button class="btn small" data-act="signout">Sign out</button></div></div></section>';
   else if(ONLINE)h+='<section><div class="card"><h2>Not signed in</h2><p class="muted" style="margin:0">Your plan is only saved on this device. Sign in to sync it across your phone and tablet and to study with friends.</p><div><button class="btn primary" data-act="to-auth">Sign in or create an account</button></div></div></section>';
+  const th=st.theme||"classic";
+  h+='<section><div class="sec-h"><h2>Theme</h2></div><div class="themes">'+THEMES.map(t=>'<button class="theme" data-act="theme" data-id="'+t.id+'" aria-pressed="'+(th===t.id)+'"><span class="tsw" style="background:'+t.bg+';border-color:'+t.line+'"><i style="background:'+t.brand+'"></i><i style="background:'+t.hl+'"></i></span><b>'+t.name+'</b>'+(t.note?'<span class="muted">'+t.note+'</span>':'')+'</button>').join("")+'</div></section>';
   h+='<section><div class="sec-h"><h2>Week shape</h2><span class="muted">'+hm(wm)+' a week</span></div><div class="card">'+
    '<div class="field"><span class="lab">Study days</span><div class="daychips">'+DAYS.map((d,i)=>'<button data-act="day" data-i="'+i+'" aria-pressed="'+!!st.days[i]+'">'+d+'</button>').join("")+'</div></div>'+
    '<div class="grid2">'+
@@ -908,6 +935,7 @@ function render(){
   if(ONLINE&&authMode==="pending"){nav.hidden=true;main.innerHTML='<section><p class="muted">Loading your plan…</p></section>';return}
   if(ONLINE&&authMode==="out"&&!offlineChosen){nav.hidden=true;document.getElementById("countdown").textContent="Sign in to sync your plan across devices and study with friends.";main.innerHTML=viewAuth();return}
   nav.hidden=false;
+  applyTheme(state.settings.theme);
   const plan=buildPlan();
   header(plan);
   document.querySelectorAll(".tabbar button[data-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===tab)));
@@ -935,6 +963,7 @@ document.getElementById("main").addEventListener("click",e=>{
   else if(a==="wk"){const d=+b.dataset.d;weekOffset=d===0?0:weekOffset+d;render()}
   else if(a==="rest"){const wk=b.dataset.wk;commit({restWeeks:{[wk]:!state.restWeeks[wk]}})}
   else if(a==="day"){const i=+b.dataset.i,days=state.settings.days.slice();days[i]=days[i]?0:1;const p={settings:{days}};if(!days[i]&&state.settings.longDay===i)p.settings.longDay=-1;commit(p)}
+  else if(a==="theme"){commit({settings:{theme:b.dataset.id}})}
   else if(a==="w"){const id=b.dataset.id,s=state.subjects[id];const w=Math.max(.5,Math.min(10,(+s.w||1)+(+b.dataset.d)));commit({subjects:{[id]:{w}}})}
   else if(a==="on"){const id=b.dataset.id;commit({subjects:{[id]:{on:!state.subjects[id].on}}})}
   else if(a==="add"){const inp=document.getElementById("f-new");const name=(inp.value||"").trim();if(!name){inp.focus();return}

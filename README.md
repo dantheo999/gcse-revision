@@ -4,6 +4,7 @@ A revision timetable for UK GCSEs that runs in the browser on a phone or tablet:
 
 - Weighted sessions across subjects, from mock prep through to the summer exams
 - A "Tonight" card with steps and a timer, tick-offs, a week view and progress tracking
+- Rewards: points, levels, badges, streak shields and a weekly recap (can be switched off in Set up)
 - Accounts that sync each person's plan across devices
 - Study groups: friends keep their own plans but line up core subjects on "together nights"
 

@@ -205,8 +205,54 @@ button:disabled{opacity:.6;cursor:default}
 .tsw{height:44px;border-radius:8px;border:1px solid;display:flex;align-items:flex-end;gap:5px;padding:6px}
 .tsw i{width:16px;height:16px;border-radius:50%}
 .theme .muted{font-size:.75rem;line-height:1.2}
+/* rewards */
+.chips{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lvlchip{font-weight:700;color:var(--ink);cursor:pointer}
+.lvrow{display:flex;gap:14px;align-items:center}
+.lvbadge{width:64px;height:64px;border-radius:18px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.8rem;flex:none;font-variant-numeric:tabular-nums}
+.lvbadge.big{width:88px;height:88px;border-radius:24px;font-size:2.6rem}
+.rank{font-family:var(--f-display);font-size:1.45rem;font-weight:800;line-height:1.15}
+.xpbar{height:12px;background:var(--sunk);border-radius:999px;overflow:hidden;margin-top:8px}
+.xpbar span{display:block;height:100%;background:var(--brand);border-radius:999px}
+.streakrow{display:flex;gap:8px 16px;align-items:center;flex-wrap:wrap;background:var(--sunk);border-radius:12px;padding:10px 14px}
+.shields{display:inline-flex;gap:4px;font-size:1.15rem}
+.shields .no{filter:grayscale(1);opacity:.3}
+.how summary{cursor:pointer;font-weight:700;font-size:.9rem;color:var(--brand)}
+.how ul{margin:8px 0 0;padding-left:1.2em;font-size:.92rem;color:var(--muted)}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.badge{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:flex-start;min-width:0}
+.badge b{display:block;font-size:.92rem;line-height:1.2}
+.bt{display:block;font-size:.78rem;color:var(--muted);line-height:1.3;margin-top:2px}
+.bicon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.35rem;flex:none;background:var(--sunk);border:3px solid var(--line)}
+.bicon.big{width:88px;height:88px;font-size:2.8rem;border-width:5px}
+.bicon.t1,.tierdots .on1{border-color:#c07a3a;background-color:#c07a3a}
+.bicon.t2,.tierdots .on2{border-color:#a3adbb;background-color:#a3adbb}
+.bicon.t3,.tierdots .on3{border-color:#e0ac00;background-color:#e0ac00}
+.bicon.t1,.bicon.t2,.bicon.t3{background-color:var(--sunk)}
+.badge.locked .bicon span{filter:grayscale(1);opacity:.35}
+.badge.locked b{color:var(--muted)}
+.tierdots{display:flex;gap:4px;margin-top:6px}
+.tierdots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.recap{background:var(--brand);color:var(--brand-ink);border:0}
+.recap .eyebrow{color:inherit;opacity:.85}
+.recap .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.recap .stat{border:0;color:var(--ink);min-width:0}
+.recap .btn{color:var(--ink)}
+.recap .stat .n{font-size:1.5rem;overflow-wrap:anywhere}
+.recap .stat .n.sm{font-size:1.1rem;line-height:1.25}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;opacity:0;transition:opacity .25s,transform .25s;z-index:30;width:max-content;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.celebrate{position:fixed;inset:0;z-index:40;background:rgb(0 0 0 / .5);display:grid;place-items:center;padding:16px}
+.celebrate[hidden]{display:none}
+.celebrate .card{max-width:360px;width:100%;text-align:center;align-items:center;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.celebrate p{margin:0}
+.cbig{font-size:3.5rem;line-height:1}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.confetti i{position:absolute;top:-16px;width:8px;height:14px;border-radius:2px;animation:fall var(--d) cubic-bezier(.3,.6,.6,1) forwards}
+@keyframes fall{to{transform:translate(var(--x),105vh) rotate(var(--r))}}
 @media (max-width:360px){.tabbar button{font-size:.78rem}}
-@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}.celebrate .card{animation:none}}
 </style>
 <script>
 /* Colour themes, picked in Set up and saved with the plan. Classic is the palette above and follows the
@@ -239,7 +285,7 @@ try{applyTheme(localStorage.getItem("gcse-theme"))}catch(e){}
   <header class="top">
     <div class="top-row">
       <h1 class="brand">GCSE <span class="hl">Revision</span> Plan</h1>
-      <span id="status" class="chip-status">Saved on this device</span>
+      <div class="chips"><button id="lvl" class="chip-status lvlchip" hidden></button><span id="status" class="chip-status">Saved on this device</span></div>
     </div>
     <div id="countdown" class="count"></div>
   </header>
@@ -254,6 +300,8 @@ try{applyTheme(localStorage.getItem("gcse-theme"))}catch(e){}
   </nav>
   <main id="main"></main>
 </div>
+<div id="celebrate" class="celebrate" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
@@ -446,8 +494,12 @@ function defaults(){
   const subjects={};
   PRESETS.forEach((p,i)=>{subjects[p.id]={name:p.name,on:p.on,w:p.w,topics:p.topics.slice(),order:i}});
   return {v:1,
-    settings:{start:"2026-11-02",exam:"2027-05-10",mockStart:"2026-11-16",mockEnd:"2026-11-27",days:[1,1,1,1,0,0,1],longDay:6,sessionMin:45,longMin:120,perNight:1,theme:"classic"},
-    subjects, restWeeks:{"2026-12-21":true}, done:{}, swaps:{}};
+    settings:{start:"2026-11-02",exam:"2027-05-10",mockStart:"2026-11-16",mockEnd:"2026-11-27",days:[1,1,1,1,0,0,1],longDay:6,sessionMin:45,longMin:120,perNight:1,theme:"classic",rewards:true},
+    subjects, restWeeks:{"2026-12-21":true}, done:{}, swaps:{},
+    timed:{},  // sessions whose timer ran to zero
+    duo:{},    // dates a together session was finished by me and a buddy
+    rw:{earned:{}}};  // rewards bookkeeping: "badge:tier" -> date first earned, last level seen, recap dismissed
+
 }
 const isObj=x=>x&&typeof x==="object"&&!Array.isArray(x);
 function merge(a,b){const o=isObj(a)?Object.assign({},a):{};if(!isObj(b))return o;for(const k in b){o[k]=isObj(b[k])&&isObj(o[k])?merge(o[k],b[k]):(isObj(b[k])?merge({},b[k]):b[k])}return o}
@@ -479,9 +531,12 @@ function setStatus(m){const el=document.getElementById("status");if(!el)return;
   const t={local:"Saved on this device",synced:"Synced",saving:"Saving…",offline:"Offline: saved on this device",signedout:"Not signed in"}[m]||m;
   el.textContent=t;el.className="chip-status"+(m==="synced"?" ok":"");}
 function commit(patch){
+  const mine=tab==="setup"&&(patch.settings||patch.subjects)&&!state.rw.setup,prev=mine?computeRewards(buildPlan()):null;
+  if(mine)patch=merge(patch,{rw:{setup:1}});
   state=normalize(merge(state,patch));localSavedAt=Date.now();saveLocal();
   if(user){setStatus("saving");clearTimeout(saveT);saveT=setTimeout(pushPlan,800)}
   render();
+  if(mine)checkRewards(prev);
 }
 async function pushPlan(){
   if(!user)return;
@@ -531,7 +586,7 @@ function subscribe(){
         const i=members.findIndex(x=>x.id===row.id);
         if(row.group_id!==gid){if(i>=0)members.splice(i,1)}
         else if(i>=0)members[i]=Object.assign({},members[i],row);else members.push(row);
-        safeRender();
+        safeRender();maybeDuo();
       })
       .on("postgres_changes",{event:"UPDATE",schema:"public",table:"groups",filter:"id=eq."+gid},p=>{if(p.new){group=Object.assign({},group,p.new);safeRender()}})
       .subscribe());
@@ -658,8 +713,155 @@ function steps(sl,info){
 }
 function subjStyle(info){return 'class="s" style="--h:'+info.h+'"'}
 
+/* ---------- rewards ---------- */
+// Points only come from planned sessions, so doing extra never earns more. Everything is worked out from the
+// ticks, so it syncs with the plan; state.rw only remembers what has already been celebrated.
+const RANKS=[[0,"Rookie"],[5,"Grinder"],[9,"Scholar"],[13,"Mastermind"],[17,"Legend"],[20,"Exam Ready"]];
+const TIERS=["","Bronze","Silver","Gold"];
+const BADGE_GROUPS=[["start","Getting going"],["cons","Consistency"],["focus","Focus"],["sweep","Topic sweeps"],["subj","All subjects"],["stage","Plan stages"],["buddy","Study buddies"],["mile","Milestones"]];
+const lvlNeed=n=>5*n*(n+1);
+function rankOf(n){let r=RANKS[0][1];RANKS.forEach(([m,name])=>{if(n>=m)r=name});return r}
+function slotPts(s){return s.done?(s.long?15:10)+(state.timed[s.key]?5:0)+(s.together&&state.duo[s.date]?10:0):0}
+function computeRewards(plan){
+  const t=ymd(todayD()),byDay={},byWeek={},done=plan.filter(s=>s.done);
+  let points=0;
+  plan.forEach(s=>{(byDay[s.date]=byDay[s.date]||[]).push(s);const w=ymd(mondayOf(s.d));(byWeek[w]=byWeek[w]||[]).push(s);points+=slotPts(s)});
+  const fullWeeks=Object.keys(byWeek).filter(w=>byWeek[w].every(s=>s.done)).length;
+  points+=fullWeeks*20;
+  // streak: study days in a row with everything done. Nights off aren't in the plan, so they never break it.
+  // A shield is earned every 7 days (hold up to 2) and is used up instead of the streak on a missed night.
+  let streak=0,best=0,shields=0,miss=0,started=false,comeback=false;
+  Object.keys(byDay).filter(d=>d<=t).sort().forEach(d=>{
+    const sl=byDay[d];
+    if(sl.some(s=>s.done)){if(started&&miss>=3)comeback=true;started=true}
+    if(sl.every(s=>s.done)){streak++;miss=0;best=Math.max(best,streak);if(streak%7===0)shields=Math.min(2,shields+1)}
+    else if(d!==t){miss++;if(shields)shields--;else streak=0}
+  });
+  let n=0;while(n<20&&points>=lvlNeed(n+1))n++;
+  const timed=done.filter(s=>state.timed[s.key]).length,duo=Object.keys(state.duo).filter(d=>state.duo[d]).length;
+  const longs=Object.keys(byDay).filter(d=>{const l=byDay[d].filter(s=>s.long);return l.length&&l.every(s=>s.done)}).length;
+  const subs=activeSubjects(),ex=parse(state.settings.exam),B=[];
+  const badge=(grp,id,e,name,tiers,v,prog,title)=>B.push({grp,id,e,name,tiers,v,prog,title:title||name});
+  badge("start","first","👣","First Step",[[1,"Finish your first session"]],done.length);
+  badge("start","mine","🎨","Made It Mine",[[1,"Change anything in Set up to suit you"]],state.rw.setup?1:0);
+  badge("cons","streak","🔥","On a Roll",[[5,"5-day streak"],[15,"15-day streak"],[30,"30-day streak"]],best,"Best streak: "+best);
+  badge("cons","weeks","📅","Full Week",[[1,"Finish every session in a week"],[4,"4 full weeks"],[12,"12 full weeks"]],fullWeeks,"Full weeks: "+fullWeeks);
+  badge("cons","comeback","💪","Comeback Kid",[[1,"Come back after missing 3 study nights"]],comeback?1:0);
+  badge("cons","rest","🔋","Recharged",[[1,"Take a rest week"]],Object.keys(state.restWeeks).filter(w=>state.restWeeks[w]&&w<=t&&w>=ymd(mondayOf(parse(state.settings.start)))).length);
+  badge("focus","timer","⏱️","Locked In",[[10,"10 sessions with the timer run to zero"],[30,"30 timed sessions"],[75,"75 timed sessions"]],timed,"Timed sessions: "+timed);
+  badge("focus","long","🏋️","Weekend Warrior",[[3,"Finish 3 long sessions"],[8,"8 long sessions"],[15,"15 long sessions"]],longs,"Long sessions: "+longs);
+  subs.forEach(s=>{
+    const c=new Map(s.topics.map(x=>[x,0]));done.forEach(x=>{if(x.sid===s.id&&!x.exam&&c.has(x.topic))c.set(x.topic,c.get(x.topic)+1)});
+    const v=[...c.values()],passes=Math.min(...v);
+    badge("sweep","sweep-"+s.id,"🧹",s.name,[[1,"Cover every topic once"],[2,"Every topic twice"],[3,"Every topic three times"]],passes,v.filter(x=>x>passes).length+"/"+v.length+" topics this round","Topic Sweep: "+s.name);
+  });
+  let allRound=0;
+  if(subs.length>1){const ids=subs.map(s=>s.id),ds=done.map(x=>[x.d.getTime(),x.sid]).sort((a,b)=>a[0]-b[0]);
+    for(let i=0;i<ds.length&&!allRound;i++){const got=new Set();for(let j=i;j<ds.length&&ds[j][0]-ds[i][0]<14*864e5;j++)got.add(ds[j][1]);if(ids.every(id=>got.has(id)))allRound=1}}
+  badge("subj","allround","🌈","All-Rounder",[[1,"Revise every subject within two weeks"]],allRound);
+  const stage=(id,e,name,k,f,label,ok)=>{const a=plan.filter(s=>s.phase.k===k);if(!a.length)return;const d=a.filter(s=>s.done).length;
+    badge("stage",id,e,name,[[1,label]],d>=Math.ceil(a.length*f)&&ok!==false?1:0,d+"/"+a.length+" sessions")};
+  stage("mockready","🎯","Mock Ready","M",.75,"Finish 75% of Mock prep sessions");
+  stage("mocks","⚔️","Survived the Mocks","X",.75,"Finish 75% of mock-week sessions");
+  stage("fixlist","🛠️","Fix-List Hero","R",.75,"Finish 75% of Mock review sessions and enter your mock grades",subs.some(s=>s.mock));
+  stage("final","🚀","Final Push","E",.8,"Finish 80% of Exam mode sessions");
+  if(ONLINE)badge("buddy","duo","🤝","Study Buddy",[[1,"A together night you and a buddy both finish"],[10,"10 together nights"],[25,"25 together nights"]],duo,"Together nights: "+duo);
+  const win=[100,50,10].filter(k=>done.some(x=>{const dd=dayDiff(x.d,ex);return dd<=k&&dd>k-7})).length;
+  badge("mile","countdown","⏳","Countdown",[[1,"Revise in the week when 100, 50 or 10 days are left"],[2,"Hit two of those weeks"],[3,"Hit all three"]],win);
+  // a badge once earned stays earned, even if a tick is undone or a setting changes later
+  B.forEach(b=>{let had=0;for(let i=1;i<=b.tiers.length;i++)if(state.rw.earned[b.id+":"+i])had=i;b.tier=Math.max(had,b.tiers.filter(x=>b.v>=x[0]).length)});
+  return {points,fullWeeks,streak,best,shields,duo,badges:B,level:{n,rank:rankOf(n),cur:lvlNeed(n),next:n<20?lvlNeed(n+1):null}};
+}
+/* after something the user did: toast the points, then celebrate any new level or badge (once, across devices) */
+function checkRewards(prev){
+  const r=computeRewards(buildPlan()),rw=state.rw,t=ymd(todayD()),earned={},q=[];
+  const quiet=state.settings.rewards===false,intro=!rw.init&&prev.points>0;
+  r.badges.forEach(b=>{let top=0;for(let i=1;i<=b.tier;i++){const k=b.id+":"+i;if(!rw.earned[k]){earned[k]=t;top=i}}if(top&&!intro)q.push({badge:b,tier:top})});
+  const lv=rw.lvl||0;
+  if(r.level.n>lv&&!intro)q.unshift({level:r.level,rankUp:r.level.rank!==rankOf(lv)});
+  if(intro)q.push({intro:r});
+  if(Object.keys(earned).length||r.level.n>lv||!rw.init)commit({rw:{earned,lvl:Math.max(r.level.n,lv),init:1}});
+  if(quiet)return;
+  const g=r.points-prev.points;
+  if(g>0){const bits=["+"+g+" points"];
+    if(r.fullWeeks>prev.fullWeeks)bits.push("full week bonus");
+    if(r.duo>prev.duo)bits.push("together bonus");
+    if(r.shields>prev.shields)bits.push("🛡️ streak shield earned");
+    toast(bits.join(" · "));if(!q.length)confetti(30)}
+  q.forEach(celebrate);
+}
+/* together-night bonus: my together session today is done and a buddy's is too */
+function maybeDuo(){
+  if(!user||!group)return;const t=ymd(todayD());if(state.duo[t])return;
+  const plan=buildPlan();if(!plan.some(s=>s.date===t&&s.together&&s.done))return;
+  if(!members.some(m=>m.id!==user.id&&m.summary&&m.summary.date===t&&m.summary.together&&m.summary.together.done))return;
+  const prev=computeRewards(plan);commit({duo:{[t]:1}});checkRewards(prev);
+}
+let celebQ=[],toastT=null;
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),2800)}
+function confetti(n){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const box=document.createElement("div"),cs=getComputedStyle(document.documentElement),cols=["--brand","--hl","--good","--warn"].map(v=>cs.getPropertyValue(v).trim());
+  box.className="confetti";box.setAttribute("aria-hidden","true");
+  for(let i=0;i<n;i++){const p=document.createElement("i");
+    p.style.cssText="left:"+(Math.random()*100)+"%;background:"+cols[i%cols.length]+";--x:"+(Math.random()*160-80)+"px;--r:"+(Math.random()*720-360)+"deg;--d:"+(1.4+Math.random()*1.4)+"s;animation-delay:"+(Math.random()*.3)+"s";
+    box.appendChild(p)}
+  document.body.appendChild(box);setTimeout(()=>box.remove(),3600);
+}
+function celebrate(item){celebQ.push(item);if(celebQ.length===1)showCeleb()}
+function showCeleb(){
+  const c=celebQ[0],el=document.getElementById("celebrate");
+  if(!c){el.hidden=true;el.innerHTML="";return}
+  let h;
+  if(c.level)h='<span class="lvbadge big" aria-hidden="true">'+c.level.n+'</span><span class="eyebrow">Level up!</span><h2 id="celeb-h">'+(c.rankUp?'New rank: '+c.level.rank:'Level '+c.level.n)+'</h2><p class="muted">'+(c.rankUp?'You\'re level '+c.level.n+' now. ':'')+(c.level.next?'Next level at '+c.level.next+' points.':'That\'s the top level. You\'re exam ready!')+'</p>';
+  else if(c.badge){const b=c.badge,multi=b.tiers.length>1;
+    h='<span class="bicon big t'+(multi?c.tier:3)+'" aria-hidden="true"><span>'+b.e+'</span></span><span class="eyebrow">'+(multi?TIERS[c.tier]+' badge':'Badge unlocked')+'</span><h2 id="celeb-h">'+esc(b.title)+'</h2><p class="muted">'+esc(b.tiers[c.tier-1][1])+'</p>'}
+  else h='<span class="cbig" aria-hidden="true">🎉</span><h2 id="celeb-h">Rewards are here</h2><p class="muted">The sessions you\'ve already done have earned you <b>'+c.intro.points+' points</b> (level '+c.intro.level.n+', '+c.intro.level.rank+') and <b>'+c.intro.badges.filter(b=>b.tier).length+'</b> badges. Find them in Progress.</p>';
+  el.innerHTML='<div class="card" role="dialog" aria-modal="true" aria-labelledby="celeb-h">'+h+'<button class="btn primary" data-act="celeb-ok">Nice!</button></div>';
+  el.hidden=false;el.querySelector("button").focus();confetti(70);
+}
+function badgeCard(b){
+  const n=b.tiers.length,t=b.tier,multi=n>1;
+  const lab=t?(multi?TIERS[t]+": ":"")+b.tiers[t-1][1]:"To earn: "+b.tiers[0][1];
+  return '<div class="badge'+(t?'':' locked')+'"><span class="bicon'+(t?' t'+(multi?t:3):'')+'" aria-hidden="true"><span>'+b.e+'</span></span><div style="min-width:0"><b>'+esc(b.name)+'</b><span class="bt">'+esc(lab)+'</span>'+
+    (t&&t<n?'<span class="bt">Next: '+esc(b.tiers[t][1])+'</span>':'')+(b.prog&&t<n?'<span class="bt">'+esc(b.prog)+'</span>':'')+
+    (multi?'<span class="tierdots" aria-label="'+t+' of '+n+' tiers">'+[1,2,3].map(i=>'<i class="'+(i<=t?'on'+i:'')+'"></i>').join("")+'</span>':'')+'</div></div>';
+}
+function rewardsSection(r){
+  const L=r.level,pct=L.next?Math.round((r.points-L.cur)/(L.next-L.cur)*100):100,got=r.badges.filter(b=>b.tier).length;
+  let h='<section id="rewards"><div class="sec-h"><h2>Rewards</h2><span class="muted mono">'+r.points+' points</span></div><div class="card">'+
+   '<div class="lvrow"><span class="lvbadge" aria-hidden="true">'+L.n+'</span><div style="flex:1;min-width:0"><span class="eyebrow">Level '+L.n+(L.n<20?' of 20':'')+'</span><div class="rank">'+L.rank+'</div>'+
+   '<div class="xpbar" role="img" aria-label="'+pct+'% of the way to the next level"><span style="width:'+pct+'%"></span></div>'+
+   '<div class="muted" style="font-size:.88rem;margin-top:4px">'+(L.next?'<span class="mono">'+(L.next-r.points)+'</span> points to level '+(L.n+1):'Top level reached!')+'</div></div></div>'+
+   '<div class="streakrow"><span>🔥 <b class="mono">'+r.streak+'</b>-day streak</span><span class="muted">Best <span class="mono">'+r.best+'</span></span><span class="shields" role="img" aria-label="'+r.shields+' of 2 streak shields">'+[0,1].map(i=>'<span'+(i<r.shields?'':' class="no"')+'>🛡️</span>').join("")+'</span></div>'+
+   '<p class="tip" style="margin:0">Every 7 days in a row earns a streak shield (you can hold 2). Miss a study night and a shield gets used, so your streak carries on. Nights off and rest weeks never break it.</p>'+
+   '<details class="how"><summary>How points work</summary><ul><li>Finish a session: 10 points (each half of a long session: 15)</li><li>Let the timer run to zero first: +5</li><li>Finish a together night and a buddy finishes theirs too: +10</li><li>Every session in a week done: +20</li></ul><p class="muted" style="font-size:.9rem;margin:8px 0 0">Points only come from your plan, so doing extra won\'t earn more. Rest is part of the plan.</p></details></div></section>';
+  h+='<section><div class="sec-h"><h2>Badges</h2><span class="muted"><span class="mono">'+got+'</span> of <span class="mono">'+r.badges.length+'</span> earned</span></div>';
+  BADGE_GROUPS.forEach(([g,name])=>{const bs=r.badges.filter(b=>b.grp===g);if(bs.length)h+='<h3>'+name+'</h3><div class="badges">'+bs.map(badgeCard).join("")+'</div>'});
+  return h+'</section>';
+}
+/* weekly recap: Sunday evening for this week, Monday to Wednesday for last week, until closed */
+function recapWeek(){
+  if(state.settings.rewards===false)return null;
+  const now=new Date(),d=dow(now),mon=mondayOf(todayD());
+  const wk=d===6&&now.getHours()>=18?ymd(mon):d<=2?ymd(addDays(mon,-7)):null;
+  return wk&&state.rw.recap!==wk?wk:null;
+}
+function recapCard(plan,wk){
+  const end=ymd(addDays(parse(wk),6)),sl=plan.filter(s=>s.date>=wk&&s.date<=end);if(!sl.length)return '';
+  const done=sl.filter(s=>s.done),full=done.length===sl.length,mins=done.reduce((a,s)=>a+s.m,0);
+  const pts=done.reduce((a,s)=>a+slotPts(s),0)+(full?20:0),by={};done.forEach(s=>by[s.sid]=(by[s.sid]||0)+s.m);
+  const top=Object.keys(by).sort((a,b)=>by[b]-by[a])[0],badges=Object.values(state.rw.earned).filter(d=>d&&d>=wk&&d<=end).length;
+  const msg=full?"Every session done. Full week! 🔥":done.length>=sl.length*.6?"Solid week. Keep it rolling.":done.length?"Every session counts. Fresh start this week.":"Quiet week, and that's OK. Fresh start this week.";
+  const stat=(n,l,sm)=>'<div class="stat"><span class="n'+(sm?' sm':'')+'">'+n+'</span><span class="l">'+l+'</span></div>';
+  return '<section><div class="card recap"><span class="eyebrow">Your week · '+fmt(parse(wk))+' – '+fmt(parse(end))+'</span><h2>'+msg+'</h2><div class="stats">'+
+   stat(done.length+'/'+sl.length,'sessions')+stat(hm(mins),'revised')+stat('+'+pts,'points')+(top?stat(esc(subjInfo(top).name),'top subject',1):'')+'</div>'+
+   '<div>🔥 <b class="mono">'+rew.streak+'</b>-day streak'+(badges?' · 🏅 <b class="mono">'+badges+'</b> new badge'+(badges>1?'s':''):'')+' · Level '+rew.level.n+'</div>'+
+   '<div><button class="btn small" data-act="recap-close" data-wk="'+wk+'">Close</button></div></div></section>';
+}
+
 /* ---------- views ---------- */
-let tab="tonight",weekOffset=0,timer={key:null,left:0,endAt:0,running:false},confirmReset=false,openSwap=null;
+let rew=null,tab="tonight",weekOffset=0,timer={key:null,left:0,endAt:0,running:false},confirmReset=false,openSwap=null;
 const VALID=["tonight","week","buddies","progress","setup"];
 if(VALID.includes(location.hash.slice(1)))tab=location.hash.slice(1);
 
@@ -716,6 +918,7 @@ function viewTonight(plan){
     h+='<section><div class="sec-h"><h2>The plan starts '+DAYS_LONG[dow(parse(plan[0].date))]+' '+fmt(parse(plan[0].date))+'</h2></div><p class="calm muted">Nothing to do yet. Here is the first session so it isn\'t a surprise.</p>'+first.map(s=>sessionCard(s)).join("")+'</section>';
     return h+upcoming(plan,plan[0].date);
   }
+  const wk=recapWeek();if(wk)h+=recapCard(plan,wk);
   if(todays.length){
     const left=todays.filter(s=>!s.done).length;
     h+='<section><div class="sec-h"><h2>'+(left?'Tonight: just <span class="hl">'+(todays.length>1?'this':'this one')+'</span>':'All done <span class="hl">tonight</span>')+'</h2><span class="muted">'+DAYS_LONG[dow(todayD())]+' '+fmt(todayD())+'</span></div>'+
@@ -761,12 +964,9 @@ function viewProgress(plan){
   const due=plan.filter(s=>s.date<=t),done=plan.filter(s=>s.done);
   const pct=due.length?Math.round(done.filter(s=>s.date<=t).length/due.length*100):0;
   const minsDone=done.reduce((a,s)=>a+s.m,0),minsAll=plan.reduce((a,s)=>a+s.m,0);
-  // streak of study days fully done, counting back from today (today only counts if done)
-  const byDay={};plan.forEach(s=>{(byDay[s.date]=byDay[s.date]||[]).push(s)});
-  const daysList=Object.keys(byDay).filter(d=>d<=t).sort().reverse();
-  let streak=0;for(const d of daysList){const all=byDay[d].every(s=>s.done);if(all)streak++;else if(d===t)continue;else break}
+  const streak=rew.streak;
   const r=46,C=2*Math.PI*r;
-  let h='<section><div class="card"><div class="ringwrap"><svg class="ring" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="'+pct+'% of sessions so far done"><circle cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--sunk)" stroke-width="12"/>'+(pct?'<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--brand)" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+(C*pct/100)+' '+C+'" transform="rotate(-90 60 60)"/>':'')+'<text x="60" y="68" text-anchor="middle" font-size="26">'+pct+'%</text></svg>'+
+  let h=(state.settings.rewards!==false?rewardsSection(rew):'')+'<section><div class="card"><div class="ringwrap"><svg class="ring" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="'+pct+'% of sessions so far done"><circle cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--sunk)" stroke-width="12"/>'+(pct?'<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--brand)" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+(C*pct/100)+' '+C+'" transform="rotate(-90 60 60)"/>':'')+'<text x="60" y="68" text-anchor="middle" font-size="26">'+pct+'%</text></svg>'+
    '<div style="flex:1;min-width:180px"><h2>Sessions done so far</h2><p class="muted" style="margin:.3em 0 0"><span class="mono">'+done.filter(s=>s.date<=t).length+'</span> of <span class="mono">'+due.length+'</span> sessions planned up to today. Anything above 80% is a strong term.</p></div></div></div>'+
    '<div class="stats"><div class="stat"><span class="n">'+hrs(minsDone)+'h</span><span class="l">revised so far</span></div><div class="stat"><span class="n">'+streak+'</span><span class="l">study days in a row</span></div><div class="stat"><span class="n">'+hrs(minsAll-minsDone)+'h</span><span class="l">left in the plan</span></div></div></section>';
   // phases
@@ -791,11 +991,7 @@ function viewProgress(plan){
 
 /* ---------- study buddies ---------- */
 const listNames=a=>a.length<=1?(a[0]||""):a.slice(0,-1).join(", ")+" & "+a[a.length-1];
-function streakOf(plan){
-  const t=ymd(todayD()),byDay={};plan.forEach(s=>{(byDay[s.date]=byDay[s.date]||[]).push(s)});
-  let streak=0;for(const d of Object.keys(byDay).filter(d=>d<=t).sort().reverse()){if(byDay[d].every(s=>s.done))streak++;else if(d===t)continue;else break}
-  return streak;
-}
+function streakOf(plan){return computeRewards(plan).streak}
 function computeSummary(plan){
   const t=ymd(todayD()),mon=ymd(mondayOf(todayD())),sun=ymd(addDays(mondayOf(todayD()),6));
   const today=plan.filter(s=>s.date===t),week=plan.filter(s=>s.date>=mon&&s.date<=sun),tog=today.find(s=>s.together);
@@ -899,6 +1095,7 @@ function viewSetup(plan){
   else if(ONLINE)h+='<section><div class="card"><h2>Not signed in</h2><p class="muted" style="margin:0">Your plan is only saved on this device. Sign in to sync it across your phone and tablet and to study with friends.</p><div><button class="btn primary" data-act="to-auth">Sign in or create an account</button></div></div></section>';
   const th=st.theme||"classic";
   h+='<section><div class="sec-h"><h2>Theme</h2></div><div class="themes">'+THEMES.map(t=>'<button class="theme" data-act="theme" data-id="'+t.id+'" aria-pressed="'+(th===t.id)+'"><span class="tsw" style="background:'+t.bg+';border-color:'+t.line+'"><i style="background:'+t.brand+'"></i><i style="background:'+t.hl+'"></i></span><b>'+t.name+'</b>'+(t.note?'<span class="muted">'+t.note+'</span>':'')+'</button>').join("")+'</div></section>';
+  h+='<section><div class="sec-h"><h2>Rewards</h2></div><div class="card"><div class="subj-top"><span class="nm">Show points, levels and badges</span><button class="switch" role="switch" style="--c:var(--brand)" aria-checked="'+(st.rewards!==false)+'" data-act="rewards" aria-label="Show points, levels and badges"></button></div><p class="tip" style="margin:0">Turned off, nothing is lost: points and badges keep counting in the background.</p></div></section>';
   h+='<section><div class="sec-h"><h2>Week shape</h2><span class="muted">'+hm(wm)+' a week</span></div><div class="card">'+
    '<div class="field"><span class="lab">Study days</span><div class="daychips">'+DAYS.map((d,i)=>'<button data-act="day" data-i="'+i+'" aria-pressed="'+!!st.days[i]+'">'+d+'</button>').join("")+'</div></div>'+
    '<div class="grid2">'+
@@ -925,19 +1122,22 @@ function viewSetup(plan){
      (preset(s.id)?'':'<button class="btn small ghost" data-act="del" data-id="'+s.id+'" style="margin-top:8px;align-self:flex-start">Remove subject</button>')+'</details></div>';
   });
   h+='<div class="subjcard"><div class="field"><label for="f-new">Add another subject</label><div style="display:flex;gap:8px"><input type="text" id="f-new" placeholder="e.g. Spanish, Music, Business"><button class="btn primary" data-act="add">Add</button></div></div></div></section>';
-  h+='<section><div class="sec-h"><h2>Start over</h2></div><div class="card"><p style="margin:0" class="muted">Clears every tick and swap. Settings and subjects stay.</p>'+
+  h+='<section><div class="sec-h"><h2>Start over</h2></div><div class="card"><p style="margin:0" class="muted">Clears every tick and swap, plus your points and badges. Settings and subjects stay.</p>'+
    (confirmReset?'<div class="confirm"><b>Clear all progress?</b><button class="btn" style="border-color:var(--warn);color:var(--warn)" data-act="reset-yes">Yes, clear it</button><button class="btn ghost" data-act="reset-no">Cancel</button></div>':'<div><button class="btn" data-act="reset">Clear progress…</button></div>')+'</div></section>';
   return h;
 }
 
 function render(){
-  const main=document.getElementById("main"),nav=document.querySelector("nav.tabs");
+  const main=document.getElementById("main"),nav=document.querySelector("nav.tabs"),chip=document.getElementById("lvl");
+  chip.hidden=true;
   if(ONLINE&&authMode==="pending"){nav.hidden=true;main.innerHTML='<section><p class="muted">Loading your plan…</p></section>';return}
   if(ONLINE&&authMode==="out"&&!offlineChosen){nav.hidden=true;document.getElementById("countdown").textContent="Sign in to sync your plan across devices and study with friends.";main.innerHTML=viewAuth();return}
   nav.hidden=false;
   applyTheme(state.settings.theme);
   const plan=buildPlan();
+  rew=computeRewards(plan);
   header(plan);
+  if(state.settings.rewards!==false){chip.hidden=false;chip.textContent="Lv "+rew.level.n+" · 🔥 "+rew.streak;chip.setAttribute("aria-label","Level "+rew.level.n+", "+rew.streak+"-day streak. Open rewards")}
   document.querySelectorAll(".tabbar button[data-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===tab)));
   const v={tonight:viewTonight,week:viewWeek,buddies:viewBuddies,progress:viewProgress,setup:viewSetup}[tab];
   main.innerHTML=v(plan);
@@ -955,7 +1155,7 @@ document.getElementById("main").addEventListener("click",e=>{
   if(a==="done"){e.preventDefault();
     const plan=buildPlan(),sl=plan.find(s=>s.key===key);if(!sl)return;
     if(state.done[key])commit({done:{[key]:null}});
-    else{commit({done:{[key]:{s:sl.sid,t:sl.topic,m:sl.m,at:ymd(todayD()),g:sl.together||null}}});if(timer.key===key)stopTimer()}
+    else{const prev=computeRewards(plan);commit({done:{[key]:{s:sl.sid,t:sl.topic,m:sl.m,at:ymd(todayD()),g:sl.together||null}}});if(timer.key===key)stopTimer();checkRewards(prev);maybeDuo()}
     openSwap=null;render();
   }
   else if(a==="swapopen"){openSwap=openSwap===key?null:key;render()}
@@ -972,7 +1172,10 @@ document.getElementById("main").addEventListener("click",e=>{
   else if(a==="del"){commit({subjects:{[b.dataset.id]:{deleted:true,on:false}}})}
   else if(a==="reset"){confirmReset=true;render()}
   else if(a==="reset-no"){confirmReset=false;render()}
-  else if(a==="reset-yes"){confirmReset=false;const done={},swaps={};Object.keys(state.done).forEach(k=>done[k]=null);Object.keys(state.swaps).forEach(k=>swaps[k]=null);commit({done,swaps})}
+  else if(a==="reset-yes"){confirmReset=false;const clear=o=>{const x={};Object.keys(o).forEach(k=>x[k]=null);return x};
+    commit({done:clear(state.done),swaps:clear(state.swaps),timed:clear(state.timed),duo:clear(state.duo),rw:{earned:clear(state.rw.earned),lvl:0}})}
+  else if(a==="rewards"){commit({settings:{rewards:state.settings.rewards===false}})}
+  else if(a==="recap-close"){commit({rw:{recap:b.dataset.wk}})}
   else if(a==="timer"){toggleTimer(key,+b.dataset.m)}
   else if(a==="timer-reset"){stopTimer();render()}
   else if(a==="to-auth"){offlineChosen=false;authMsg="";render()}
@@ -998,6 +1201,9 @@ document.getElementById("main").addEventListener("click",e=>{
     sb.from("groups").update({settings:gs}).eq("id",group.id).then(({error})=>{if(error){gErr="Couldn't save the group change. Check your connection.";render()}});
   }
 });
+document.getElementById("lvl").addEventListener("click",()=>{tab="progress";openSwap=null;confirmReset=false;try{history.replaceState(null,"","#progress")}catch(_){location.hash="progress"}render();window.scrollTo(0,0)});
+document.getElementById("celebrate").addEventListener("click",e=>{if(e.target.closest('[data-act="celeb-ok"]')||e.target.id==="celebrate"){celebQ.shift();showCeleb()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&celebQ.length){celebQ.shift();showCeleb()}});
 document.getElementById("main").addEventListener("submit",e=>{if(e.target.id==="authform"){e.preventDefault();submitAuth()}});
 document.getElementById("main").addEventListener("change",e=>{
   const t=e.target,st=state.settings;
@@ -1038,7 +1244,12 @@ function step(){
   if(!timer.running)return;
   timer.left=(timer.endAt-Date.now())/1000;
   const el=document.getElementById("t-"+timer.key);
-  if(timer.left<=0){timer.left=0;timer.running=false;clearInterval(tick);releaseWake();if(el)el.textContent="Time's up";const b=document.querySelector('[data-act="timer"][data-key="'+timer.key+'"]');if(b)b.textContent="Restart";timer.key=null;presence();return}
+  if(timer.left<=0){
+    const k=timer.key;timer.left=0;timer.running=false;clearInterval(tick);releaseWake();timer.key=null;presence();
+    const prev=computeRewards(buildPlan());commit({timed:{[k]:1}});
+    if(state.done[k])checkRewards(prev);else if(state.settings.rewards!==false)toast("Time's up! Mark it as done for the +5 timer bonus");
+    const e2=document.getElementById("t-"+k);if(e2)e2.textContent="Time's up";const b=document.querySelector('[data-act="timer"][data-key="'+k+'"]');if(b)b.textContent="Restart";
+    return}
   if(el)el.textContent=clock(timer.left);
 }
 function stopTimer(){clearInterval(tick);timer={key:null,left:0,endAt:0,running:false};releaseWake();presence()}
